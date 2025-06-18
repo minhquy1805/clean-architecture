@@ -1,0 +1,97 @@
+[
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "Delete",
+    "RelativePath": "api/v1/User/delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "GetByEmail",
+    "RelativePath": "api/v1/User/getbyemail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "Register",
+    "RelativePath": "api/v1/User/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "Domain.Entities.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "GetAll",
+    "RelativePath": "api/v1/User/selectall",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/User/selectbyid",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "Update",
+    "RelativePath": "api/v1/User/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "user",
+        "Type": "Domain.Entities.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

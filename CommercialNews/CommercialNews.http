@@ -1,0 +1,6 @@
+@CommercialNews_HostAddress = http://localhost:5051
+
+GET {{CommercialNews_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
