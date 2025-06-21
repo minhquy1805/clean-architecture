@@ -11,7 +11,7 @@ namespace Application.Interfaces
     public interface IUserService
     {
         // 📌 Đăng ký user mới (input: DTO Register, output: new Id)
-        Task<int> RegisterUserAsync(UserRegisterDto dto);
+        Task<int> RegisterUserAsync(UserRegisterDto dto, string verifyLinkBase);
 
         // 📌 Đăng nhập (input: DTO Login, output: JWT token string)
         //Task<string> LoginAsync(LoginRequest request);
@@ -39,5 +39,11 @@ namespace Application.Interfaces
 
         // 📌 Xoá user
         Task DeleteUserAsync(int id);
+
+        Task UpdateOwnProfileAsync(int userId, UserDto dto);
+        Task ChangePasswordAsync(int userId, ChangePasswordRequest request);
+
+        Task ResetPasswordAsync(ResetPasswordRequest request);
+        Task ForgotPasswordAsync(string email, string verifyLinkBase);
     }
 }

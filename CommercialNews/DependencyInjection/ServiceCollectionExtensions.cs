@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Abstractions;
+using Infrastructure.BackgroundServices;
 using Infrastructure.Data.Helpers;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Services;
@@ -11,19 +12,39 @@ namespace CommercialNews.DependencyInjection
     {
         public static IServiceCollection AddProjectServices(this IServiceCollection services) 
         {
-            //Add DatabaseHelper
+            // Database, HttpClient
             services.AddScoped<IDatabaseHelper, DatabaseHelper>();
-
-            //Add HttpClientService
             services.AddScoped<IHttpClientService, HttpClientService>();
 
-            // Add your repository & business service DI here:
-            // services.AddScoped<INewsRepository, NewsRepository>();
-            // services.AddScoped<INewsService, NewsService>();
+            // Repository
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserVerificationRepository, UserVerificationRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            // Service
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserVerificationService, UserVerificationService>();
+            services.AddScoped<IAuthService, AuthService>();
+
+            // Token Generator
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
+
+            // Register BackgroundService
+            services.AddHostedService<VerificationTokenCleanupHostedService>();
+
+            // Email Service
+            services.AddScoped<IEmailService, EmailService>();
+
+            //PasswordHash
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+            //Token Generator
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+
 
             return services;
+
         }
     }
 }

@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\interfaces\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\interfaces\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\dtos\\resendverificationrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\dtos\\resendverificationrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Services\\UserService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\UserService.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Services\\UserService.cs",
-              "RelativeToolTip": "Application\\Services\\UserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\AuthService.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Services\\AuthService.cs",
+              "RelativeToolTip": "Application\\Services\\AuthService.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-17T16:45:12.31Z",
+              "WhenOpened": "2025-06-21T16:34:33.145Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Interfaces\\IUserService.cs",
-              "RelativeDocumentMoniker": "Application\\Interfaces\\IUserService.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Interfaces\\IUserService.cs",
-              "RelativeToolTip": "Application\\Interfaces\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA4AAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Interfaces\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Application\\Interfaces\\IAuthService.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Interfaces\\IAuthService.cs",
+              "RelativeToolTip": "Application\\Interfaces\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-17T16:38:27.792Z",
+              "WhenOpened": "2025-06-21T16:33:58.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ResendVerificationRequest.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\DTOs\\ResendVerificationRequest.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\ResendVerificationRequest.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\DTOs\\ResendVerificationRequest.cs",
+              "RelativeToolTip": "Application\\DTOs\\ResendVerificationRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-21T16:33:48.155Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "CommercialNews\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAA3wEcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-21T16:26:54.019Z",
               "EditorCaption": ""
             }
           ]

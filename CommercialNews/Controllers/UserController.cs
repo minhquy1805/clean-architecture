@@ -1,7 +1,7 @@
-﻿using Application.Interfaces;
-using Domain.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CommercialNews.Controllers
 {
@@ -16,70 +16,106 @@ namespace CommercialNews.Controllers
             _userService = userService;
         }
 
-        // POST: api/User/register
-        [Route("[controller]/register")]
-        [HttpPost]
-        public async Task<IActionResult> Register([FromBody] User user)
-        {
-            try
-            {
-                var id = await _userService.RegisterUserAsync(user);
-                return Ok(new { message = "Đăng ký thành công!", userId = id });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        // GET: api/User/{id}
-        [Route("[controller]/selectbyid")]
-        [HttpGet]
-        public async Task<IActionResult> GetById(int id)
+        /// <summary>
+        /// ✅ Get User By Id
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDto>> GetById(int id)
         {
             var user = await _userService.GetByIdAsync(id);
             if (user == null) return NotFound();
             return Ok(user);
         }
 
-        // GET: api/User/email/{email}
-        [Route("[controller]/getbyemail")]
-        [HttpGet]
-        public async Task<IActionResult> GetByEmail(string email)
+        /// <summary>
+        /// Get profile of the logged-in user.
+        /// </summary>
+        [HttpGet("me")]
+        public async Task<IActionResult> GetProfile()
         {
-            var user = await _userService.GetByEmailAsync(email);
-            if (user == null) return NotFound();
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var user = await _userService.GetByIdAsync(userId);
             return Ok(user);
         }
 
-        // GET: api/User
-        [Route("[controller]/selectall")]
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        /// <summary>
+        /// Update profile
+        /// </summary>
+        [HttpPut("me")]
+        public async Task<IActionResult> UpdateMe([FromBody] UserDto dto)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            dto.UserId = userId;
+            await _userService.UpdateOwnProfileAsync(userId, dto);
+            return Ok(new { message = "Profile updated successfully!" });
+        }
+
+        /// <summary>
+        /// Change password
+        /// </summary>
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _userService.ChangePasswordAsync(userId, request);
+            return Ok(new { message = "Password changed successfully!" });
+        }
+
+        /// <summary>
+        /// ✅ Get All Users
+        /// </summary>
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
         {
             var users = await _userService.GetAllAsync();
             return Ok(users);
         }
 
-        // PUT: api/User/{id}
-        [Route("[controller]/update")]
-        [HttpPut]
-        public async Task<IActionResult> Update(int id, [FromBody] User user)
-        {
-            if (id != user.UserId)
-                return BadRequest(new { message = "UserId không khớp!" });
+        /// <summary>
+        /// ✅ Get Users with Paging & Filter
+        /// </summary>
 
-            await _userService.UpdateUserAsync(user);
-            return Ok(new { message = "Cập nhật thành công!" });
+        [HttpGet("paging")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetPaging(
+           [FromQuery] string? whereCondition,
+           [FromQuery] int start = 0,
+           [FromQuery] int rows = 10,
+           [FromQuery] string sortBy = "CreatedAt DESC")
+        {
+            var users = await _userService.SelectSkipAndTakeWhereDynamicAsync(whereCondition ?? "", start, rows, sortBy);
+            var total = await _userService.GetRecordCountWhereDynamicAsync(whereCondition ?? "");
+            return Ok(new { data = users, total });
         }
 
-        // DELETE: api/User/{id}
-        [Route("[controller]/delete")]
-        [HttpDelete]
+        /// <summary>
+        /// ✅ Get Users for Dropdown List
+        /// </summary>
+        [HttpGet("dropdown")]
+        public async Task<ActionResult<IEnumerable<UserDropDownDto>>> GetDropDownList()
+        {
+            var dropdown = await _userService.GetDropDownListDataAsync();
+            return Ok(dropdown);
+        }
+
+        /// <summary>
+        /// ✅ Update User
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UserDto dto)
+        {
+            if (id != dto.UserId) return BadRequest("ID mismatch.");
+            await _userService.UpdateUserAsync(dto);
+            return Ok(new { message = "Updated successfully!" });
+        }
+
+        /// <summary>
+        /// ✅ Delete User
+        /// </summary>
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _userService.DeleteUserAsync(id);
-            return Ok(new { message = "Xóa thành công!" });
+            return Ok(new { message = "Deleted successfully!" });
         }
     }
 }

@@ -1,8 +1,55 @@
 [
   {
     "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Application.DTOs.UserDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "Update",
+    "RelativePath": "api/v1/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.UserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
     "Method": "Delete",
-    "RelativePath": "api/v1/User/delete",
+    "RelativePath": "api/v1/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -10,38 +57,6 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CommercialNews.Controllers.UserController",
-    "Method": "GetByEmail",
-    "RelativePath": "api/v1/User/getbyemail",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "email",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CommercialNews.Controllers.UserController",
-    "Method": "Register",
-    "RelativePath": "api/v1/User/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "user",
-        "Type": "Domain.Entities.User",
         "IsRequired": true
       }
     ],
@@ -50,48 +65,82 @@
   {
     "ContainingType": "CommercialNews.Controllers.UserController",
     "Method": "GetAll",
-    "RelativePath": "api/v1/User/selectall",
+    "RelativePath": "api/v1/all",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Application.DTOs.UserDto, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "CommercialNews.Controllers.UserController",
-    "Method": "GetById",
-    "RelativePath": "api/v1/User/selectbyid",
+    "Method": "GetDropDownList",
+    "RelativePath": "api/v1/dropdown",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Application.DTOs.UserDropDownDto, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.UserController",
+    "Method": "GetPaging",
+    "RelativePath": "api/v1/paging",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "whereCondition",
+        "Type": "System.String",
         "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CommercialNews.Controllers.UserController",
-    "Method": "Update",
-    "RelativePath": "api/v1/User/update",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
+      },
       {
-        "Name": "id",
+        "Name": "start",
         "Type": "System.Int32",
         "IsRequired": false
       },
       {
-        "Name": "user",
-        "Type": "Domain.Entities.User",
-        "IsRequired": true
+        "Name": "rows",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "sortBy",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Application.DTOs.UserDto, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]
