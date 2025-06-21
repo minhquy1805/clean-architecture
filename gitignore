@@ -1,0 +1,45 @@
+# 👉 Visual Studio build files
+.vs/
+*.user
+*.suo
+
+# 👉 Build output
+bin/
+obj/
+
+# 👉 Rider IDE files (optional)
+.idea/
+
+# 👉 Logs
+*.log
+
+# 👉 ASP.NET Secrets
+secrets.json
+
+# 👉 Local config — ignore environment-specific configs
+appsettings.json
+appsettings.Development.json
+appsettings.Local.json
+
+# 👉 Publish output
+publish/
+*.PublishProfiles/
+
+# 👉 npm / yarn if you have frontend
+node_modules/
+
+# 👉 Python virtualenv if used
+venv/
+ENV/
+
+# 👉 OS generated files
+*.DS_Store
+Thumbs.db
+
+# 👉 Packages
+*.nupkg
+*.snupkg
+*.lock.json
+
+# 👉 dotenv env files (optional)
+.env
