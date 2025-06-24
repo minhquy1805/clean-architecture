@@ -20,6 +20,8 @@ namespace CommercialNews.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserVerificationRepository, UserVerificationRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IUserAuditRepository, UserAuditRepository>();
+            services.AddScoped<ILoginHistoryRepository, LoginHistoryRepository>();
 
             // Service
             services.AddScoped<IUserService, UserService>();

@@ -8,5 +8,7 @@ namespace Application.Interfaces
         Task InsertAsync(RefreshToken token);
         Task<RefreshToken?> GetByTokenAsync(string token);
         Task UpdateAsync(RefreshToken token);
+
+        Task DeleteByUserIdAsync(int userId);
     }
 }

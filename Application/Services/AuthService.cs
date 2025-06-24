@@ -1,12 +1,8 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -18,6 +14,8 @@ namespace Application.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserVerificationService _userVerificationService;
         private readonly IEmailService _emailService;
+        private readonly ILoginHistoryRepository _loginHistoryRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthService(
             IUserRepository userRepository,
@@ -25,104 +23,169 @@ namespace Application.Services
             IJwtTokenGenerator jwtTokenGenerator,
             IRefreshTokenRepository refreshTokenRepository,
             IUserVerificationService userVerificationService,
-            IEmailService emailService) // Thêm DI
-         {
+            IEmailService emailService,
+            ILoginHistoryRepository loginHistoryRepository,
+            IHttpContextAccessor httpContextAccessor)
+        {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _jwtTokenGenerator = jwtTokenGenerator;
             _refreshTokenRepository = refreshTokenRepository;
             _userVerificationService = userVerificationService;
             _emailService = emailService;
+            _loginHistoryRepository = loginHistoryRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private string GetIp() =>
+            _httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+
+        private string GetAgent() =>
+            _httpContextAccessor?.HttpContext?.Request?.Headers["User-Agent"].ToString() ?? "";
 
         public async Task<string> LoginAsync(LoginRequest request)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Email);
-            if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
-                throw new Exception("Invalid email or password.");
-
-            if(user.Flag != "T")
-                throw new Exception("Account is not verified yet.");
-
-            // Standard Claims
-            var claims = new List<Claim>
+            User? user = null;
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+                user = await _userRepository.GetByEmailAsync(request.Email);
 
-            var accessToken = _jwtTokenGenerator.GenerateToken(claims);
+                if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, request.Password))
+                    throw new Exception("Invalid email or password.");
 
-            // Create RefreshToken
-            var refreshToken = new RefreshToken
+                if (user.Flag != "T")
+                    throw new Exception("Account is not verified yet.");
+
+                if (!user.IsActive)
+                    throw new Exception("Account is deactivated. Please contact admin.");
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+
+                var accessToken = _jwtTokenGenerator.GenerateToken(claims);
+
+                var refreshToken = new RefreshToken
+                {
+                    UserId = user.UserId,
+                    Token = Guid.NewGuid().ToString(),
+                    CreatedAt = DateTime.UtcNow,
+                    ExpiryDate = DateTime.UtcNow.AddDays(7),
+                    Flag = "T"
+                };
+
+                await _refreshTokenRepository.InsertAsync(refreshToken);
+
+                user.LastLoginAt = DateTime.UtcNow;
+                await _userRepository.UpdateAsync(user);
+
+                // ✅ Log SUCCESS
+                await _loginHistoryRepository.InsertAsync(new LoginHistory
+                {
+                    UserId = user.UserId,
+                    IsSuccess = true,
+                    IpAddress = GetIp(),
+                    UserAgent = GetAgent(),
+                    Message = "Login success"
+                });
+
+                return accessToken + "|" + refreshToken.Token;
+            }
+            catch (Exception ex)
             {
-                UserId = user.UserId,
-                Token = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
-                ExpiryDate = DateTime.UtcNow.AddDays(7),
-                Flag = "T"
-            };
+                // ✅ Log FAIL
+                await _loginHistoryRepository.InsertAsync(new LoginHistory
+                {
+                    UserId = user?.UserId ?? 0,
+                    IsSuccess = false,
+                    IpAddress = GetIp(),
+                    UserAgent = GetAgent(),
+                    Message = ex.Message
+                });
 
-            await _refreshTokenRepository.InsertAsync(refreshToken);
-
-            // Update last login
-            user.LastLoginAt = DateTime.UtcNow;
-            await _userRepository.UpdateAsync(user);
-
-            return accessToken + "|" + refreshToken.Token;
+                throw;
+            }
         }
 
-        public async Task<AuthResultDto> RefreshTokenAsync(string refreshToken) 
+        public async Task<AuthResultDto> RefreshTokenAsync(string refreshToken)
         {
-            var existing = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
-            if (existing == null || existing.ExpiryDate < DateTime.UtcNow || existing.RevokedAt != null)
-                throw new Exception("Invalid refresh token.");
-
-            // Get user
-            var user = await _userRepository.GetByIdAsync(existing.UserId);
-            if(user == null)
-                throw new Exception("User not found.");
-
-            // Revoke old
-            existing.RevokedAt = DateTime.UtcNow;
-            var newRefreshToken = Guid.NewGuid().ToString();
-            existing.ReplacedByToken = newRefreshToken;
-            await _refreshTokenRepository.UpdateAsync(existing);
-
-            // Create new RefreshToken
-            var newToken = new RefreshToken
+            try
             {
-                UserId = user.UserId,
-                Token = newRefreshToken,
-                CreatedAt = DateTime.UtcNow,
-                ExpiryDate = DateTime.UtcNow.AddDays(7),
-                Flag = "T"
-            };
+                var existing = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
+                if (existing == null || existing.ExpiryDate < DateTime.UtcNow || existing.RevokedAt != null)
+                    throw new Exception("Invalid refresh token.");
 
-            await _refreshTokenRepository.InsertAsync(newToken);
+                var user = await _userRepository.GetByIdAsync(existing.UserId);
+                if (user == null)
+                    throw new Exception("User not found.");
 
-            // New AccessToken
+                if (!user.IsActive)
+                    throw new Exception("Account is deactivated. Please contact admin.");
 
-            var claims = new List<Claim>
+                // Revoke old
+                existing.RevokedAt = DateTime.UtcNow;
+                var newRefreshToken = Guid.NewGuid().ToString();
+                existing.ReplacedByToken = newRefreshToken;
+                await _refreshTokenRepository.UpdateAsync(existing);
+
+                // Create new RefreshToken
+                var newToken = new RefreshToken
+                {
+                    UserId = user.UserId,
+                    Token = newRefreshToken,
+                    CreatedAt = DateTime.UtcNow,
+                    ExpiryDate = DateTime.UtcNow.AddDays(7),
+                    Flag = "T"
+                };
+                await _refreshTokenRepository.InsertAsync(newToken);
+
+                // New AccessToken
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+
+                var newAccessToken = _jwtTokenGenerator.GenerateToken(claims);
+
+                // ✅ Log SUCCESS
+                await _loginHistoryRepository.InsertAsync(new LoginHistory
+                {
+                    UserId = user.UserId,
+                    IsSuccess = true,
+                    IpAddress = GetIp(),
+                    UserAgent = GetAgent(),
+                    Message = $"RefreshToken success. OldToken={refreshToken}, NewToken={newRefreshToken}"
+                });
+
+                return new AuthResultDto
+                {
+                    AccessToken = newAccessToken,
+                    RefreshToken = newRefreshToken
+                };
+            }
+            catch (Exception ex)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+                // ✅ Log FAIL
+                await _loginHistoryRepository.InsertAsync(new LoginHistory
+                {
+                    UserId = 0,
+                    IsSuccess = false,
+                    IpAddress = GetIp(),
+                    UserAgent = GetAgent(),
+                    Message = $"RefreshToken failed: {ex.Message}"
+                });
 
-            var newAccessToken = _jwtTokenGenerator.GenerateToken(claims);
-
-            return new AuthResultDto
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
-            };
+                throw;
+            }
         }
 
         public async Task ResendVerificationAsync(ResendVerificationRequest request, string domain)
         {
-            // Tìm user theo email
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null)
                 throw new Exception("Email not found!");
@@ -130,13 +193,11 @@ namespace Application.Services
             if (user.Flag == "T")
                 throw new Exception("Account is already verified.");
 
-            // Tạo token mới
+            if (!user.IsActive)
+                throw new Exception("Account is deactivated. Please contact admin.");
+
             var token = await _userVerificationService.CreateVerificationTokenAsync(user.UserId);
-
-            // Build link mới
             var verifyLink = $"{domain}/api/v1/auth/verify?token={token}";
-
-            // Gửi lại email
             await _emailService.SendVerificationEmailAsync(user.Email, verifyLink);
         }
 

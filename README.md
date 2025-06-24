@@ -1,22 +1,24 @@
 # 📰 **CommercialNews — User Module**
 
-Welcome to **CommercialNews** — a modern, production-ready news platform designed to deliver powerful user authentication, secure sessions, and a clean architecture structure for scalability.
+Welcome to **CommercialNews** — a modern, production-ready news platform designed with **Clean Architecture**, secure authentication, and flexible user management.
 
-This module focuses on everything related to **user management**, ensuring that each user is securely registered, verified, authenticated, and empowered to manage their account.
+This module handles all **User Management** concerns — from secure registration to admin-level user lifecycle operations.
 
 ---
 
 ## ✅ 1️⃣ Overview
 
-The **User Module** provides a secure, production-ready set of endpoints for user authentication, account management, and session handling.
+The **User Module** includes:
 
-**Core features include:**
-- Register with email verification
-- JWT login with Refresh Token support
-- Session revocation (Logout)
-- Password recovery (Forgot/Reset)
-- Self-profile management (view, update, change password)
-- Admin-ready CRUD for users
+- Secure **email registration** with verification
+- **JWT**-based authentication with **Refresh Token** support
+- **Password recovery** with secure reset token
+- **Self-service** profile updates & password change
+- **Admin-level** CRUD, soft delete & restore
+- **Rate Limiting** to prevent abuse
+- **Audit Logs** for user actions
+- **Login History** for security insights
+- Clean separation: **Domain / Application / Infrastructure / API**
 
 ---
 
@@ -26,22 +28,33 @@ The **User Module** provides a secure, production-ready set of endpoints for use
 
 | API | Route | Method | Purpose |
 |-----|-------|--------|---------|
-| Register | /api/v1/auth/register | POST | Create user, send email verification |
-| Verify Email | /api/v1/auth/verify | GET | Verify account via token |
-| Resend Verification | /api/v1/auth/resend-verification | POST | Resend a new verification link |
-| Login | /api/v1/auth/login | POST | Login, get AccessToken + RefreshToken |
-| Refresh Token | /api/v1/auth/refresh-token | POST | Get a new AccessToken when old one expires |
-| Logout | /api/v1/auth/logout | POST | Revoke Refresh Token (logout) |
+| Register | `/api/v1/auth/register` | POST | Create new user & send verification email |
+| Verify Email | `/api/v1/auth/verify` | GET | Verify email with token |
+| Resend Verification | `/api/v1/auth/resend-verification` | POST | Resend verification link |
+| Login | `/api/v1/auth/login` | POST | Authenticate & receive tokens |
+| Refresh Token | `/api/v1/auth/refresh-token` | POST | Renew AccessToken |
+| Logout | `/api/v1/auth/logout` | POST | Revoke RefreshToken (optional) |
 
 ### 👤 User Self Management
 
 | API | Route | Method | Purpose |
 |-----|-------|--------|---------|
-| Get Own Profile | /api/v1/users/me | GET | Retrieve logged-in user’s profile |
-| Update Own Profile | /api/v1/users/me | PUT | Update profile details |
-| Change Password | /api/v1/users/change-password | POST | Change current password |
-| Forgot Password | /api/v1/users/forgot-password | POST | Request password reset link |
-| Reset Password | /api/v1/users/reset-password | POST | Reset password using reset token |
+| Get Profile | `/api/v1/users/me` | GET | View logged-in user profile |
+| Update Profile | `/api/v1/users/me` | PUT | Update profile fields |
+| Change Password | `/api/v1/users/change-password` | POST | Update password |
+| Forgot Password | `/api/v1/users/forgot-password` | POST | Request reset link |
+| Reset Password | `/api/v1/users/reset-password` | POST | Reset with token |
+
+### 🔑 Admin User Management
+
+| API | Route | Method | Purpose |
+|-----|-------|--------|---------|
+| Get All | `/api/v1/admin/users/all` | GET | Get all users |
+| Paging & Filter | `/api/v1/admin/users/paging` | GET | Search & filter users |
+| Get by Id | `/api/v1/admin/users/{id}` | GET | View user detail |
+| Update | `/api/v1/admin/users/{id}` | PUT | Admin update |
+| Soft Delete | `/api/v1/admin/users/{id}/soft-delete` | PUT | Deactivate user |
+| Restore | `/api/v1/admin/users/{id}/restore` | PUT | Reactivate user |
 
 ---
 
@@ -49,91 +62,94 @@ The **User Module** provides a secure, production-ready set of endpoints for use
 
 | Table | Purpose |
 |-------|---------|
-| User | Stores user data, flag for verified status |
-| UserVerification | Stores verification/reset tokens |
-| RefreshToken | Manages refresh token sessions |
+| **User** | Stores user data, IsActive + Flag fields |
+| **UserVerification** | Manages email verify / reset tokens |
+| **RefreshToken** | Stores refresh sessions |
+| **UserAudit** | Tracks updates & sensitive actions |
+| **LoginHistory** | Logs every login attempt (success & fail) |
 
 ---
 
-## ✅ 4️⃣ Typical Flows
+## ✅ 4️⃣ Security & Best Practices
 
-### Register & Verify
-1. POST /auth/register → creates user with Flag = F
-2. System sends email with link: /auth/verify?token=...
-3. User clicks link → GET /auth/verify → sets Flag = T
-
-### Login & Session
-1. POST /auth/login → checks Flag == T → returns Access & Refresh Token.
-2. FE uses Access Token for protected endpoints.
-3. On expiry → FE calls POST /auth/refresh-token.
-4. User logs out → POST /auth/logout → revokes Refresh Token.
-
-### Forgot/Reset Password
-1. POST /users/forgot-password → sends /reset-password?token=...
-2. User opens link → FE shows form → sends POST /users/reset-password.
-
-### Resend Verification
-User hasn’t verified yet? Call POST /auth/resend-verification to get a fresh link.
+- **Email verification (Flag)**: must be `T` to log in.
+- **IsActive**: Soft delete disables user access.
+- **Rate Limit**: Configured for register, forgot-password, etc.
+- **Audit**: Changes tracked (Update, ChangePassword).
+- **Login History**: IP, UserAgent stored for every attempt.
+- **JWT**: Secure short-lived AccessToken + long-lived RefreshToken.
 
 ---
 
-## ✅ 5️⃣ Security Best Practices
+## ✅ 5️⃣ Structure
 
-- Access Token: Short-lived (15–30 mins), signed JWT.
-- Refresh Token: Long-lived (7–30 days), stored in DB, supports revocation.
-- Email Verification: Required (Flag = T) to allow login.
-- Mail: Uses MailKit + HTML templates in /EmailTemplates/.
-
----
-
-## ✅ 6️⃣ Project Structure
-
-| Layer | Description |
-|-------|--------------|
-| Domain | Core entities: User, UserVerification, RefreshToken |
-| Application | Interfaces, DTOs, core services |
-| Infrastructure | Repositories for data access |
-| API | Controllers: AuthController, UserController |
-| Email Service | MailKit + HTML templates (VerificationEmailTemplate.html, ResetPasswordEmailTemplate.html) |
+| Layer | Content |
+|-------|---------|
+| **Domain** | Entities: User, UserVerification, RefreshToken, Audit, LoginHistory |
+| **Application** | DTOs, Validators, Interfaces, Services |
+| **Infrastructure** | ADO.NET repositories, stored procedure calls |
+| **API** | AuthController, UserController, AdminUserController |
+| **Email** | MailKit + Razor/HTML templates |
 
 ---
 
-## ✅ 7️⃣ Configuration
+## ✅ 6️⃣ Additional Features Implemented
 
-| Key | Where | Purpose |
-|-----|-------|---------|
-| Connection String | Settings:ConnectionString | Database |
-| JWT Settings | Jwt:Key, Jwt:Issuer, Jwt:Audience | Token signing |
-| SMTP Settings | Email:From, Email:SmtpHost, Email:SmtpPort, Email:SmtpUser, Email:SmtpPass | Email delivery |
-
----
-
-## ✅ 8️⃣ Suggested Enhancements
-
-| Idea | Notes |
-|------|-------|
-| Resend Verification | ✅ Implemented |
-| Admin CRUD | Use /users/{id} for admin operations |
-| 2FA/OTP | Optional for stronger security |
-| Audit Logging | Recommended for user activity tracking |
-| Rate Limiting | Prevent brute-force attacks |
+✅ **Soft Delete**: via `IsActive`  
+✅ **Audit Logs**: for admin edits, self edits, password change  
+✅ **Login History**: for security monitoring  
+✅ **Rate Limit**: per IP per route (AspNetCoreRateLimit)  
+✅ **ExceptionMiddleware**: global error handling  
+✅ **FluentValidation**: robust input validation  
+✅ **ApiResponse**: unified success/error format  
+✅ **BaseController**: DRY pattern for consistent response
 
 ---
 
-## ✅ 9️⃣ Getting Started
+## ✅ 7️⃣ Suggested Next Steps
 
-- Clone the repo
-- Configure appsettings.json:
-  - Database connection
-  - JWT secret & issuer
-  - SMTP for email
-- Run migrations for User, UserVerification, RefreshToken
-- Test with Swagger or Postman
+| Idea | Note |
+|------|------|
+| 2FA / OTP | Add phone/email code at login |
+| ABAC / RBAC | Dynamic RoleClaims for modular permission |
+| Session Management UI | Admin can force logout devices |
+| Logging & Monitoring | Use Serilog + ELK |
+| CI/CD | Secrets vault + pipeline |
+| Swagger JWT Auth | Enable JWT in Swagger UI |
+| Unit Test | Increase coverage to 80%+ |
 
 ---
 
-## ✅ 10️⃣ Contacts
+## ✅ 8️⃣ How To Start
 
-For contributions, suggestions, or to expand with Google OAuth or Social Login — feel free to reach out or open an issue!
+✅ Clone repo  
+✅ Configure `appsettings.json`:
+- Database
+- SMTP (Gmail)
+- JWT settings
 
-🚀 **Ready to scale your user authentication with confidence!**
+✅ Run migrations or scripts for:
+- `User`
+- `UserVerification`
+- `RefreshToken`
+- `UserAudit`
+- `LoginHistory`
+
+✅ Test with Swagger or Postman.
+
+---
+
+## ✅ 9️⃣ Contact
+
+Any ideas or PRs welcome!
+**CommercialNews** — flexible, secure & ready to scale 🚀
+
+---
+
+## ✅ 10️⃣ One More Thing!
+
+Check `docs/UserModule_Phase2_Roadmap.pdf` for your next upgrade!
+
+---
+
+**Happy coding!**

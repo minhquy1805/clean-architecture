@@ -4,6 +4,10 @@ using CommercialNews.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Application.Validators;
+using AspNetCoreRateLimit;
 
 namespace CommercialNews
 {
@@ -13,10 +17,12 @@ namespace CommercialNews
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add services to the container
             builder.Services.AddControllers();
 
-           
+            // ✅ FluentValidation v11+
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssembly(typeof(UserRegisterDtoValidator).Assembly);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +34,8 @@ namespace CommercialNews
             // register services for dependency injection (di)
             builder.Services.AddSingleton(connectionString);
             builder.Services.AddProjectServices();
+
+            builder.Services.AddHttpContextAccessor();
 
             //1 Bind JWT Settings
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -50,6 +58,13 @@ namespace CommercialNews
                     };
             });
 
+            // Add AspNetCoreRateLimit
+            builder.Services.AddMemoryCache();
+            builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+            builder.Services.AddInMemoryRateLimiting();
+            builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+
             //Add Authorization
             builder.Services.AddAuthorization();
 
@@ -67,6 +82,7 @@ namespace CommercialNews
 
             //Build App
             var app = builder.Build();
+            app.UseMiddleware<CommercialNews.Middleware.ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -84,6 +100,9 @@ namespace CommercialNews
 
             //Use CORS 
             app.UseCors("AllowAll");
+
+            // ✅ Rate Limiting Middleware
+            app.UseIpRateLimiting();
 
             // ✅ Use Authentication & Authorization — ĐÚNG THỨ TỰ
             app.UseAuthentication();

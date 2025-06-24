@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -21,5 +16,6 @@ namespace Application.Interfaces
         Task<int> InsertAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(int id);
+        Task UpdateIsActiveAsync(int userId, bool isActive);
     }
 }

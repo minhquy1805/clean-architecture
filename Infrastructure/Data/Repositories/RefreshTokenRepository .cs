@@ -29,12 +29,12 @@ namespace Infrastructure.Data.Repositories
             {
                 new SqlParameter("@UserId", token.UserId),
                 new SqlParameter("@Token", token.Token),
-                new SqlParameter("@CreatedAt", token.CreatedAt),
+                //new SqlParameter("@CreatedAt", token.CreatedAt),
                 new SqlParameter("@ExpiryDate", token.ExpiryDate),
                 new SqlParameter("@RevokedAt", token.RevokedAt ?? (object)DBNull.Value),
                 new SqlParameter("@ReplacedByToken", token.ReplacedByToken ?? (object)DBNull.Value),
                 new SqlParameter("@IPAddress", token.IPAddress ?? (object)DBNull.Value),
-                new SqlParameter("@Flag", token.Flag),
+                new SqlParameter("@Flag", token.Flag ?? "T"),
                 new SqlParameter("@Field1", token.Field1 ?? (object)DBNull.Value),
                 new SqlParameter("@Field2", token.Field2 ?? (object)DBNull.Value),
                 new SqlParameter("@Field3", token.Field3 ?? (object)DBNull.Value),
@@ -47,7 +47,9 @@ namespace Infrastructure.Data.Repositories
                 "RefreshToken_Insert",
                 parameters,
                 CommandType.StoredProcedure,
-                DatabaseOperationType.Create);
+                DatabaseOperationType.Create,
+                isPrimaryKeyGuid: false // ✅ BẮT BUỘC!
+            );
         }
 
         public async Task<RefreshToken?> GetByTokenAsync(string token)
@@ -76,7 +78,7 @@ namespace Infrastructure.Data.Repositories
                 new SqlParameter("@TokenId", token.TokenId),
                 new SqlParameter("@UserId", token.UserId),
                 new SqlParameter("@Token", token.Token),
-                new SqlParameter("@CreatedAt", token.CreatedAt),
+                //new SqlParameter("@CreatedAt", token.CreatedAt),
                 new SqlParameter("@ExpiryDate", token.ExpiryDate),
                 new SqlParameter("@RevokedAt", token.RevokedAt ?? (object)DBNull.Value),
                 new SqlParameter("@ReplacedByToken", token.ReplacedByToken ?? (object)DBNull.Value),
@@ -95,6 +97,22 @@ namespace Infrastructure.Data.Repositories
                 parameters,
                 CommandType.StoredProcedure,
                 DatabaseOperationType.Update);
+        }
+
+        public async Task DeleteByUserIdAsync(int userId)
+        {
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@UserId", userId)
+            };
+
+            await _databaseHelper.ExecuteSqlCommandAsync(
+                _connectionString,
+                "RefreshToken_DeleteByUserId",
+                parameters,
+                CommandType.StoredProcedure,
+                DatabaseOperationType.Delete
+            );
         }
 
         #region Helper

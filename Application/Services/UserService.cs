@@ -1,7 +1,9 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 
 namespace Application.Services
@@ -14,6 +16,9 @@ namespace Application.Services
         private readonly IPasswordHasher _passwordHasher;
         private readonly IConfiguration _configuration;
         private readonly IUserVerificationRepository _verificationRepo;
+        private readonly IUserAuditRepository _auditRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
         public UserService(
             IUserRepository userRepository,
@@ -21,7 +26,10 @@ namespace Application.Services
             IEmailService emailService,
             IPasswordHasher passwordHasher,
             IConfiguration configuration,
-            IUserVerificationRepository verificationRepo)
+            IUserVerificationRepository verificationRepo,
+            IUserAuditRepository auditRepository,
+            IHttpContextAccessor httpContextAccessor,
+            IRefreshTokenRepository refreshTokenRepository)
         {
             _userRepository = userRepository;
             _userVerificationService = userVerificationService;
@@ -29,6 +37,9 @@ namespace Application.Services
             _passwordHasher = passwordHasher;
             _configuration = configuration;
             _verificationRepo = verificationRepo;
+            _auditRepository = auditRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
 
@@ -52,7 +63,8 @@ namespace Application.Services
                 PhoneNumber = dto.PhoneNumber,
                 Role = dto.Email == "minhquy073@gmail.com" ? "Admin" : "User",
                 CreatedAt = DateTime.UtcNow,
-                Flag = "F"
+                Flag = "F",
+                IsActive = true
             };
 
             // 4️ Insert
@@ -120,6 +132,8 @@ namespace Application.Services
             var user = await _userRepository.GetByIdAsync(dto.UserId);
             if (user == null) throw new Exception("User not found!");
 
+            var oldValue = JsonSerializer.Serialize(user);
+
             user.FullName = dto.FullName;
             user.Email = dto.Email;
             user.PhoneNumber = dto.PhoneNumber;
@@ -137,6 +151,17 @@ namespace Application.Services
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.UpdateAsync(user);
+
+            var newValue = JsonSerializer.Serialize(user);
+
+            await _auditRepository.InsertAsync(new UserAudit
+            {
+                UserId = dto.UserId,
+                Action = "AdminUpdateUser",
+                OldValue = oldValue,
+                NewValue = newValue,
+                IpAddress = GetIpAddress()
+            });
         }
 
         // ✅ Update User Profile
@@ -144,6 +169,12 @@ namespace Application.Services
         {
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) throw new Exception("User not found!");
+
+            if (!user.IsActive)
+                throw new Exception("Account is deactivated. Please contact admin.");
+
+
+            var oldValue = JsonSerializer.Serialize(user);
 
             // Only update fields that the user is allowed to change.
             user.FullName = dto.FullName;
@@ -154,21 +185,49 @@ namespace Application.Services
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.UpdateAsync(user);
+
+            var newValue = JsonSerializer.Serialize(user);
+
+            await _auditRepository.InsertAsync(new UserAudit
+            {
+                UserId = userId,
+                Action = "UpdateProfile",
+                OldValue = oldValue,
+                NewValue = newValue,
+                IpAddress = GetIpAddress() // Bạn có thể dùng IHttpContextAccessor để lấy IP
+            });
         }
 
         // ✅ Change Password
         public async Task ChangePasswordAsync(int userId, ChangePasswordRequest request)
         {
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new Exception("User not found!");
+            if (user == null)
+                throw new Exception("User not found!");
 
-            if (!_passwordHasher.VerifyPassword(request.CurrentPassword, user.PasswordHash))
+            if (!user.IsActive)
+                throw new Exception("Account is deactivated. Please contact admin.");
+
+            // 🗝️ ĐÚNG THỨ TỰ: hashed, plain text
+            if (!_passwordHasher.VerifyPassword(user.PasswordHash, request.CurrentPassword))
                 throw new Exception("Current password is incorrect.");
 
+            var oldValue = $"OldPasswordHash: {user.PasswordHash}";
+
+            // ✅ Hash new password rồi update
             user.PasswordHash = _passwordHasher.HashPassword(request.NewPassword);
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.UpdateAsync(user);
+
+            await _auditRepository.InsertAsync(new UserAudit
+            {
+                UserId = userId,
+                Action = "ChangePassword",
+                OldValue = oldValue,
+                NewValue = $"NewPasswordHash: {user.PasswordHash}",
+                IpAddress = GetIpAddress()
+            });
         }
 
         // Reset password request
@@ -176,6 +235,7 @@ namespace Application.Services
         {
             // Reuse Verify logic
             var verification = await _verificationRepo.GetByTokenAsync(request.Token);
+
             if (verification == null)
                 throw new Exception("Invalid or expired token.");
 
@@ -188,6 +248,9 @@ namespace Application.Services
             // Update password
             var user = await _userRepository.GetByIdAsync(verification.UserId);
             if (user == null) throw new Exception("User not found!");
+
+            if (!user.IsActive)
+                throw new Exception("Account is deactivated. Please contact admin.");
 
             user.PasswordHash = _passwordHasher.HashPassword(request.NewPassword);
             user.UpdatedAt = DateTime.UtcNow;
@@ -203,6 +266,9 @@ namespace Application.Services
             if (user == null)
                 throw new Exception("Email not found.");
 
+            if (!user.IsActive)
+                throw new Exception("Account is deactivated. Please contact admin.");
+
             // Tạo 1 verification token mới
             var token = await _userVerificationService.CreateVerificationTokenAsync(user.UserId);
 
@@ -213,11 +279,29 @@ namespace Application.Services
             await _emailService.SendResetPasswordEmailAsync(email, link);
         }
 
-
         // ✅ Delete
         public async Task DeleteUserAsync(int id)
         {
+            // 1️⃣ Xoá toàn bộ RefreshToken trước
+            await _refreshTokenRepository.DeleteByUserIdAsync(id);
+
+            // 2️⃣ Sau đó mới xoá User
             await _userRepository.DeleteAsync(id);
+        }
+
+        public async Task SoftDeleteUserAsync(int userId)
+        {
+            // 1. Xóa token để user không đăng nhập tiếp
+            await _refreshTokenRepository.DeleteByUserIdAsync(userId);
+
+            // 2. Cập nhật IsActive = false
+            await _userRepository.UpdateIsActiveAsync(userId, false);
+        }
+
+        public async Task RestoreUserAsync(int userId)
+        {
+            // Mở lại user
+            await _userRepository.UpdateIsActiveAsync(userId, true);
         }
 
         // ✅ Helper: Map Entity -> DTO
@@ -243,7 +327,10 @@ namespace Application.Services
                 Flag = user.Flag,
                 IsActive = user.IsActive
             };
+
+        private string GetIpAddress()
+        {
+            return _httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+        }
     }
-
-
 }

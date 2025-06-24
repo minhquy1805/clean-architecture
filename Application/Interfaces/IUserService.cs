@@ -45,5 +45,8 @@ namespace Application.Interfaces
 
         Task ResetPasswordAsync(ResetPasswordRequest request);
         Task ForgotPasswordAsync(string email, string verifyLinkBase);
+
+        Task SoftDeleteUserAsync(int userId);
+        Task RestoreUserAsync(int userId);
     }
 }

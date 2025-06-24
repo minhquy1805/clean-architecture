@@ -40,7 +40,8 @@ namespace Infrastructure.Data.Repositories
                 "UserVerification_Insert",
                 parameters,
                 CommandType.StoredProcedure,
-                DatabaseOperationType.Create
+                DatabaseOperationType.Create,
+                isPrimaryKeyGuid: false
             );
 
             return Convert.ToInt32(id);

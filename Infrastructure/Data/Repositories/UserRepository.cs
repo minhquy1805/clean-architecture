@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Abstractions;
 using Infrastructure.Abstractions.Enums;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-
 
 
 namespace Infrastructure.Data.Repositories
@@ -150,6 +141,23 @@ namespace Infrastructure.Data.Repositories
         {
             var dt = await _databaseHelper.GetDataTableAsync(_connectionString, "User_SelectDropDownListData", new(), CommandType.StoredProcedure);
             return MapList(dt);
+        }
+
+        public async Task UpdateIsActiveAsync(int userId, bool isActive)
+        {
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@UserId", userId),
+                new SqlParameter("@IsActive", isActive)
+            };
+
+            await _databaseHelper.ExecuteSqlCommandAsync(
+                _connectionString,
+                "User_UpdateIsActive",
+                parameters,
+                CommandType.StoredProcedure,
+                DatabaseOperationType.Update
+            );
         }
 
         #endregion

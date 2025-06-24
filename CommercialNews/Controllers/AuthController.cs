@@ -1,24 +1,27 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CommercialNews.Controllers;
 
 namespace CommercialNews.Controllers
 {
 
     [ApiController]
     [Route("api/v1/auth")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
+        private readonly IConfiguration _config;
 
         public AuthController(
             IUserService userService,
-            IAuthService authService)
+            IAuthService authService,
+            IConfiguration config)
         {
             _userService = userService;
             _authService = authService;
+            _config = config;
         }
 
         /// <summary>
@@ -27,9 +30,9 @@ namespace CommercialNews.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
         {
-            var domain = $"{Request.Scheme}://{Request.Host}"; // Build verify link base
+            var domain = $"{Request.Scheme}://{Request.Host}";
             var userId = await _userService.RegisterUserAsync(dto, domain);
-            return Ok(new { message = "Register successful. Please check your email to verify your account.", userId });
+            return OkResponse(userId, "Register successful. Please check your email to verify your account.");
         }
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace CommercialNews.Controllers
         public async Task<IActionResult> Verify([FromQuery] string token)
         {
             await _authService.VerifyEmailTokenAsync(token);
-            return Ok(new { message = "Email verified successfully!" });
+            return OkResponse<string>(null!, "Email verified successfully!");
         }
 
         /// <summary>
@@ -50,13 +53,14 @@ namespace CommercialNews.Controllers
         {
             var result = await _authService.LoginAsync(request);
 
-            // result = "access|refresh"
             var parts = result.Split("|");
-            return Ok(new
+            var response = new
             {
                 AccessToken = parts[0],
                 RefreshToken = parts[1]
-            });
+            };
+
+            return OkResponse(response, "Login successful.");
         }
 
         /// <summary>
@@ -67,9 +71,8 @@ namespace CommercialNews.Controllers
         {
             var domain = $"{Request.Scheme}://{Request.Host}";
             await _authService.ResendVerificationAsync(request, domain);
-            return Ok(new { message = "Verification email has been resent if the account is not yet verified." });
+            return OkResponse<string>(null!, "Verification email has been resent if the account is not yet verified.");
         }
-
 
         /// <summary>
         /// Refresh AccessToken and RefreshToken.
@@ -78,8 +81,29 @@ namespace CommercialNews.Controllers
         public async Task<IActionResult> Refresh([FromBody] string refreshToken)
         {
             var result = await _authService.RefreshTokenAsync(refreshToken);
-            return Ok(result);
+            return OkResponse(result, "Token refreshed successfully.");
         }
 
+        /// <summary>
+        /// ✅ Forgot Password: send reset link to email.
+        /// </summary>
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var domain = _config["App:Domain"];
+            var verifyLinkBase = $"{domain}/auth";
+            await _userService.ForgotPasswordAsync(request.Email, verifyLinkBase);
+            return OkResponse<string>(null!, "Please check your email to reset password!");
+        }
+
+        /// <summary>
+        /// ✅ Reset Password with token.
+        /// </summary>
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            await _userService.ResetPasswordAsync(request);
+            return OkResponse<string>(null!, "Password has been reset successfully.");
+        }
     }
 }

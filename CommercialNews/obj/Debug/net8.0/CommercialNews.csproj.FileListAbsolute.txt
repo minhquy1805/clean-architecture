@@ -1,16 +1,22 @@
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\appsettings.Development.json
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\appsettings.json
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\appsettings.Template.json
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.staticwebassets.endpoints.json
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.exe
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.deps.json
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.runtimeconfig.json
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\CommercialNews.pdb
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\AspNetCoreRateLimit.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Azure.Core.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Azure.Identity.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\BCrypt.Net-Next.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\FluentValidation.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\MailKit.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Bcl.Cryptography.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
@@ -36,6 +42,7 @@ D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.OpenApi.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\MimeKit.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -98,4 +105,3 @@ D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\CommercialNews.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\CommercialNews.genruntimeconfig.cache
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\ref\CommercialNews.dll
-D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
