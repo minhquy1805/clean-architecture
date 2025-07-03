@@ -1,6 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Errors;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Security;
+using Application.Interfaces.Services;
 using Domain.Entities;
-
 
 namespace Application.Services
 {
@@ -11,9 +13,9 @@ namespace Application.Services
         private readonly ITokenGenerator _tokenGenerator;
 
         public UserVerificationService(
-             IUserVerificationRepository verificationRepo,
-             IUserRepository userRepo,
-             ITokenGenerator tokenGenerator)
+            IUserVerificationRepository verificationRepo,
+            IUserRepository userRepo,
+            ITokenGenerator tokenGenerator)
         {
             _verificationRepo = verificationRepo;
             _userRepo = userRepo;
@@ -35,29 +37,24 @@ namespace Application.Services
             };
 
             await _verificationRepo.InsertAsync(verification);
-
             return token;
         }
 
         public async Task VerifyTokenAsync(string token)
         {
-            var verification = await _verificationRepo.GetByTokenAsync(token);
-            if (verification == null)
-                throw new Exception("Token không tồn tại!");
+            var verification = await _verificationRepo.GetByTokenAsync(token)
+                ?? throw VerificationErrors.TokenNotFound();
 
             if (verification.IsUsed)
-                throw new Exception("Token đã được sử dụng!");
+                throw VerificationErrors.TokenAlreadyUsed();
 
             if (verification.ExpiryDate < DateTime.UtcNow)
-                throw new Exception("Token đã hết hạn!");
+                throw VerificationErrors.TokenExpired();
 
-            // 1️ Đánh dấu token đã dùng
             await _verificationRepo.MarkAsUsedAsync(verification.UserVerificationId);
 
-            // 2 Update User.Flag = 'T'
-            var user = await _userRepo.GetByIdAsync(verification.UserId);
-            if (user == null)
-                throw new Exception("User không tồn tại!");
+            var user = await _userRepo.GetByIdAsync(verification.UserId)
+                ?? throw VerificationErrors.UserNotFound();
 
             user.Flag = "T";
             await _userRepo.UpdateAsync(user);

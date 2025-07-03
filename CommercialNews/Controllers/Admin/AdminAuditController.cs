@@ -1,7 +1,8 @@
-﻿using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CommercialNews.Responses;
+using Shared.Helpers;
+using Application.Interfaces.Services;
+using Application.DTOs.AuditLogs;
 
 
 namespace CommercialNews.Controllers.Admin
@@ -11,11 +12,11 @@ namespace CommercialNews.Controllers.Admin
     [Authorize(Roles = "Admin")]
     public class AdminAuditController : BaseController
     {
-        private readonly IUserAuditRepository _userAuditRepo;
+        private readonly IAuditService _auditService;
 
-        public AdminAuditController(IUserAuditRepository userAuditRepo)
+        public AdminAuditController(IAuditService auditService)
         {
-            _userAuditRepo = userAuditRepo;
+            _auditService = auditService;
         }
 
         /// <summary>
@@ -24,21 +25,29 @@ namespace CommercialNews.Controllers.Admin
         [HttpGet("by-user/{userId}")]
         public async Task<IActionResult> GetByUserId(int userId)
         {
-            var audits = await _userAuditRepo.GetByUserIdAsync(userId);
+            var audits = await _auditService.GetByUserIdAsync(userId);
             return OkResponse(audits, "Fetched audit log by user id.");
         }
 
         /// <summary>
         /// ✅ Get audit log with paging
         /// </summary>
-        [HttpGet("paging")]
-        public async Task<IActionResult> GetPaging(
-            [FromQuery] int? userId,
-            [FromQuery] int start = 0,
-            [FromQuery] int numberOfRows = 10)
+        [HttpPost("paging")]
+        public async Task<IActionResult> GetPaging([FromBody] AuditLogFilterDto filter)
         {
-            var audits = await _userAuditRepo.GetPagingAsync(userId, start, numberOfRows);
-            return OkResponse(audits, "Fetched audit log with paging.");
+
+            var (data, totalRecords) = await _auditService.GetPagingAsync(filter);
+
+            var pagination = new
+            {
+                currentPage = filter.CurrentPage,
+                totalPages = PaginationHelper.CalculateTotalPages(totalRecords, filter.NumberOfRows),
+                totalRecords,
+                rowsPerPage = filter.NumberOfRows,
+                pagesToShow = GridConfig.NumberOfPagesToShow
+            };
+
+            return Ok(new { data, pagination });
         }
     }
 }

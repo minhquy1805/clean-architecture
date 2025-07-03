@@ -1,13 +1,13 @@
-﻿
-using Application.DTOs;
-using CommercialNews.DependencyInjection;
+﻿using CommercialNews.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Application.Validators;
 using AspNetCoreRateLimit;
+using Infrastructure.Metadata.Bootstrap;
+using Application.Filters;
+using Application.Validators.Users;
+using Application.DTOs.Auth.Jwt;
 
 namespace CommercialNews
 {
@@ -18,7 +18,12 @@ namespace CommercialNews
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<PagingDefaultsFilter>(); // ✅ Global Action Filter cho Paging
+            });
+
+            builder.Services.AddScoped<PagingDefaultsFilter>();
 
             // ✅ FluentValidation v11+
             builder.Services.AddFluentValidationAutoValidation();
@@ -57,6 +62,9 @@ namespace CommercialNews
                             Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                     };
             });
+
+            // Khởi tạo Metadata (rất quan trọng)
+            MetadataBootstrapper.Initialize();
 
             // Add AspNetCoreRateLimit
             builder.Services.AddMemoryCache();

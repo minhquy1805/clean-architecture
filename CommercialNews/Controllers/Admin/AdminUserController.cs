@@ -1,8 +1,10 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CommercialNews.Responses;
+using Application.Interfaces.Services;
+using Shared.Helpers;
+using Application.DTOs.Users.Responses;
+using Application.DTOs.Users.Filters;
+
 
 namespace CommercialNews.Controllers.Admin
 {
@@ -43,19 +45,24 @@ namespace CommercialNews.Controllers.Admin
         /// <summary>
         /// ✅ Get users with paging & filter
         /// </summary>
-        [HttpGet("paging")]
-        public async Task<ActionResult> GetPaging(
-            [FromQuery] string? whereCondition,
-            [FromQuery] int start = 0,
-            [FromQuery] int rows = 10,
-            [FromQuery] string sortBy = "CreatedAt DESC")
+        [HttpPost("paging")]
+        public async Task<IActionResult> GetPaging([FromBody] UserFilterDto filter)
         {
-            var users = await _userService.SelectSkipAndTakeWhereDynamicAsync(whereCondition ?? "", start, rows, sortBy);
-            var total = await _userService.GetRecordCountWhereDynamicAsync(whereCondition ?? "");
+            
+            var (data, totalRecords) = await _userService.GetPagingAsync(filter);
 
-            var result = new { Data = users, Total = total };
-            return OkResponse(result, "Fetched with paging.");
+            var pagination = new
+            {
+                currentPage = filter.CurrentPage,
+                totalPages = PaginationHelper.CalculateTotalPages(totalRecords, filter.NumberOfRows),
+                totalRecords,
+                rowsPerPage = filter.NumberOfRows,
+                pagesToShow = GridConfig.NumberOfPagesToShow
+            };
+
+            return Ok(new { data, pagination });
         }
+
 
         /// <summary>
         /// ✅ Get users for dropdown
@@ -106,7 +113,7 @@ namespace CommercialNews.Controllers.Admin
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _userService.DeleteUserAsync(id);
+            await _userService.DeleteAsync(id);
             return OkResponse<string>(null!, "User deleted successfully!");
         }
     }

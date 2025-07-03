@@ -23,6 +23,7 @@ D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
@@ -30,6 +31,7 @@ D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
@@ -77,9 +79,11 @@ D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Application.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Domain.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Infrastructure.dll
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Shared.dll
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Infrastructure.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Application.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Domain.pdb
+D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\bin\Debug\net8.0\Shared.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\CommercialNews.csproj.AssemblyReference.cache
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\CommercialNews.GeneratedMSBuildEditorConfig.editorconfig
 D:\Commercial News\Clean Architecture\CommercialNews\CommercialNews\obj\Debug\net8.0\CommercialNews.AssemblyInfoInputs.cache

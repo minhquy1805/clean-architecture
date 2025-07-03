@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Helpers
+﻿namespace Shared.Helpers
 {
     public static class PaginationHelper
     {
@@ -24,11 +18,21 @@ namespace Shared.Helpers
             return endPage >= totalPages ? totalPages : endPage;
         }
 
-        public static (int startRowIndex, int totalPages) GetStartRowIndexAndTotalPages(int page, int rows, int totalRecords)
+        public static (int Start, int TotalPages) GetStartRowIndexAndTotalPages(int page, int rows, int totalRecords)
         {
-            int startRowIndex = ((page * rows) - rows);
-            int totalPages = (int)Math.Ceiling((float)totalRecords / rows);
-            return (startRowIndex, totalPages);
+            if (rows <= 0) rows = GridConfig.NumberOfRows;
+            var totalPages = CalculateTotalPages(totalRecords, rows);
+            var start = (page - 1) * rows;
+            return (start, totalPages);
         }
+
+        public static int CalculateTotalPages(int totalRecords, int rowsPerPage)
+        {
+            if (rowsPerPage <= 0) rowsPerPage = GridConfig.NumberOfRows;
+            return (int)Math.Ceiling((double)totalRecords / rowsPerPage);
+        }
+
+
+
     }
 }

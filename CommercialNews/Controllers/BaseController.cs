@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace CommercialNews.Controllers
 {
     /// <summary>
-    /// BaseController: common helpers for ApiResponse, user info, IP.
+    /// BaseController: common helpers for ApiResponse, user info, IP, etc.
     /// </summary>
     [ApiController]
     public abstract class BaseController : ControllerBase
@@ -20,13 +20,25 @@ namespace CommercialNews.Controllers
         protected BadRequestObjectResult BadRequestResponse(string message)
             => BadRequest(new ApiResponse<string>(message) { Success = false });
 
-        // ✅ Current user helper
-        protected int CurrentUserId =>
-            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        // ✅ Current User ID (int)
+        protected int? CurrentUserId
+        {
+            get
+            {
+                var value = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                return int.TryParse(value, out var id) ? id : null;
+            }
+        }
 
+        // ✅ Current Email
         protected string? CurrentUserEmail =>
-            User.FindFirstValue(ClaimTypes.Email);
+            User?.FindFirstValue(ClaimTypes.Email);
 
+        // ✅ Current Role
+        protected string? CurrentUserRole =>
+            User?.FindFirstValue(ClaimTypes.Role);
+
+        // ✅ Client IP Address
         protected string? GetIpAddress() =>
             HttpContext?.Connection?.RemoteIpAddress?.ToString();
     }

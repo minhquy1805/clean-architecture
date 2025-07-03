@@ -19,24 +19,14 @@
     "ContainingType": "CommercialNews.Controllers.Admin.AdminAuditController",
     "Method": "GetPaging",
     "RelativePath": "api/v1/admin/audit/paging",
-    "HttpMethod": "GET",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "start",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "numberOfRows",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "filter",
+        "Type": "Application.DTOs.AuditLogs.AuditLogFilterDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -61,24 +51,14 @@
     "ContainingType": "CommercialNews.Controllers.Admin.AdminLoginHistoryController",
     "Method": "GetPaging",
     "RelativePath": "api/v1/admin/login-history/paging",
-    "HttpMethod": "GET",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "start",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "numberOfRows",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "filter",
+        "Type": "Application.DTOs.LoginHistories.LoginHistoryFilterDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -114,7 +94,7 @@
       },
       {
         "Name": "dto",
-        "Type": "Application.DTOs.UserDto",
+        "Type": "Application.DTOs.Users.Responses.UserDto",
         "IsRequired": true
       }
     ],
@@ -160,29 +140,46 @@
     "ContainingType": "CommercialNews.Controllers.Admin.AdminUserController",
     "Method": "GetPaging",
     "RelativePath": "api/v1/admin/user/paging",
-    "HttpMethod": "GET",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "whereCondition",
-        "Type": "System.String",
-        "IsRequired": false
-      },
+        "Name": "filter",
+        "Type": "Application.DTOs.Users.Filters.UserFilterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminUserController",
+    "Method": "Restore",
+    "RelativePath": "api/v1/admin/user/restore/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "start",
+        "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
-      },
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminUserController",
+    "Method": "SoftDelete",
+    "RelativePath": "api/v1/admin/user/soft-delete/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "rows",
+        "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "sortBy",
-        "Type": "System.String",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -213,7 +210,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Application.DTOs.LoginRequest",
+        "Type": "Application.DTOs.Auth.Requests.LoginRequest",
         "IsRequired": true
       }
     ],
@@ -245,7 +242,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "Application.DTOs.UserRegisterDto",
+        "Type": "Application.DTOs.Users.Requests.UserRegisterDto",
         "IsRequired": true
       }
     ],
@@ -261,7 +258,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Application.DTOs.ResendVerificationRequest",
+        "Type": "Application.DTOs.Auth.Requests.ResendVerificationRequest",
         "IsRequired": true
       }
     ],
@@ -277,7 +274,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Application.DTOs.ResetPasswordRequest",
+        "Type": "Application.DTOs.Users.Requests.ResetPasswordRequest",
         "IsRequired": true
       }
     ],
@@ -309,7 +306,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Application.DTOs.ChangePasswordRequest",
+        "Type": "Application.DTOs.Users.Requests.ChangePasswordRequest",
         "IsRequired": true
       }
     ],
@@ -335,7 +332,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "Application.DTOs.UserDto",
+        "Type": "Application.DTOs.Users.Requests.UpdateOwnProfileRequest",
         "IsRequired": true
       }
     ],

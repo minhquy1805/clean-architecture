@@ -1,17 +1,22 @@
 ﻿using System.Net;
 using System.Text.Json;
-using CommercialNews.Errors; 
+using Application.Common.Exceptions;
+
 
 namespace CommercialNews.Middleware
 {
-    /// <summary>
-    /// Middleware to catch all unhandled exceptions and return a consistent JSON response.
-    /// </summary>
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IHostEnvironment _env;
+
+        // Tái sử dụng JsonOption camelCase
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false
+        };
 
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
         {
@@ -26,25 +31,61 @@ namespace CommercialNews.Middleware
             {
                 await _next(context);
             }
+            catch (AppException appEx)
+            {
+                _logger.LogWarning(appEx, $"AppException: {appEx.ErrorCode}");
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = appEx.StatusCode;
+
+                var traceId = context.TraceIdentifier ?? Guid.NewGuid().ToString();
+
+                var response = new
+                {
+                    statusCode = appEx.StatusCode,
+                    errorCode = appEx.ErrorCode,
+                    message = appEx.Message,
+                    traceId
+                };
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response, _jsonOptions));
+            }
             catch (Exception ex)
             {
-                // Log the error
                 _logger.LogError(ex, ex.Message);
 
-                // Prepare response
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                var response = _env.IsDevelopment()
-                    ? new ApiException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
-                    : new ApiException(context.Response.StatusCode, "Internal Server Error");
+                var traceId = context.TraceIdentifier ?? Guid.NewGuid().ToString();
 
-                var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                object response;
 
-                var json = JsonSerializer.Serialize(response, options);
+                if (_env.IsDevelopment())
+                {
+                    response = new
+                    {
+                        statusCode = context.Response.StatusCode,
+                        errorCode = "INTERNAL_SERVER_ERROR",
+                        message = ex.Message,
+                        details = ex.StackTrace,
+                        traceId
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        statusCode = context.Response.StatusCode,
+                        errorCode = "INTERNAL_SERVER_ERROR",
+                        message = "Internal Server Error",
+                        traceId
+                    };
+                }
 
-                await context.Response.WriteAsync(json);
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response, _jsonOptions));
             }
+
         }
     }
 }

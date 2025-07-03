@@ -1,7 +1,9 @@
-﻿using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CommercialNews.Responses;
+using Shared.Helpers;
+using Application.Interfaces.Services;
+using Application.Filters;
+using Application.DTOs.LoginHistories;
 
 namespace CommercialNews.Controllers.Admin
 {
@@ -10,11 +12,11 @@ namespace CommercialNews.Controllers.Admin
     [Authorize(Roles = "Admin")]
     public class AdminLoginHistoryController : BaseController
     {
-        private readonly ILoginHistoryRepository _loginHistoryRepo;
+        private readonly ILoginHistoryService _loginHistoryService;
 
-        public AdminLoginHistoryController(ILoginHistoryRepository loginHistoryRepo)
+        public AdminLoginHistoryController(ILoginHistoryService loginHistoryService)
         {
-            _loginHistoryRepo = loginHistoryRepo;
+            _loginHistoryService = loginHistoryService;
         }
 
         /// <summary>
@@ -23,21 +25,31 @@ namespace CommercialNews.Controllers.Admin
         [HttpGet("by-user/{userId}")]
         public async Task<IActionResult> GetByUserId(int userId)
         {
-            var logs = await _loginHistoryRepo.GetByUserIdAsync(userId);
+            var logs = await _loginHistoryService.GetByUserIdAsync(userId);
             return OkResponse(logs, "Fetched login history by user id.");
         }
 
         /// <summary>
         /// ✅ Get login history with paging
         /// </summary>
-        [HttpGet("paging")]
-        public async Task<IActionResult> GetPaging(
-            [FromQuery] int? userId,
-            [FromQuery] int start = 0,
-            [FromQuery] int numberOfRows = 10)
+        [HttpPost("paging")]
+        public async Task<IActionResult> GetPaging([FromBody] LoginHistoryFilterDto filter)
         {
-            var logs = await _loginHistoryRepo.GetPagingAsync(userId, start, numberOfRows);
-            return OkResponse(logs, "Fetched login history with paging.");
+            
+            // Lấy dữ liệu và tổng số bản ghi
+            var (data, totalRecords) = await _loginHistoryService.GetPagingAsync(filter);
+
+            // Trả về kết quả kèm thông tin phân trang
+            var pagination = new
+            {
+                currentPage = filter.CurrentPage,
+                totalPages = PaginationHelper.CalculateTotalPages(totalRecords, filter.NumberOfRows),
+                totalRecords,
+                rowsPerPage = filter.NumberOfRows,
+                pagesToShow = GridConfig.NumberOfPagesToShow
+            };
+
+            return Ok(new { data, pagination });
         }
     }
 }

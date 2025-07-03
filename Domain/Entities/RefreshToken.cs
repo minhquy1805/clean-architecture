@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class RefreshToken
     {
@@ -16,6 +10,7 @@ namespace Domain.Entities
         public DateTime? RevokedAt { get; set; }
         public string? ReplacedByToken { get; set; }
         public string? IPAddress { get; set; }
+        public string? UserAgent { get; set; }
         public string Flag { get; set; } = "T";
 
         // Extra fields

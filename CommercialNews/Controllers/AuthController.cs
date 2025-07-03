@@ -1,7 +1,8 @@
 ﻿using Application.DTOs;
-using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using CommercialNews.Controllers;
+using Application.Interfaces.Services;
+using Application.DTOs.Auth.Requests;
+using Application.DTOs.Users.Requests;
 
 namespace CommercialNews.Controllers
 {

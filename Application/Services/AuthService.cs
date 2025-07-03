@@ -1,63 +1,66 @@
-﻿using Application.DTOs;
+﻿// Refactored AuthService: Clean structure, consistent error handling, AppException, logging
+
+using Application.DTOs.Auth;
 using Application.Interfaces;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Security;
+using Application.Interfaces.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using Application.Common.Errors;
+using Application.DTOs.Auth.Requests;
+using Application.DTOs.Auth.Jwt;
 
 namespace Application.Services
 {
+    public record AuthServiceDependencies(
+        IUserRepository UserRepository,
+        IPasswordHasher PasswordHasher,
+        IJwtTokenGenerator JwtTokenGenerator,
+        IRefreshTokenRepository RefreshTokenRepository,
+        IUserVerificationService UserVerificationService,
+        IEmailService EmailService,
+        ILoginHistoryRepository LoginHistoryRepository,
+        IHttpContextAccessor HttpContextAccessor,
+        IOptions<JwtSettings> JwtOptions
+    );
+
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly IUserVerificationService _userVerificationService;
-        private readonly IEmailService _emailService;
-        private readonly ILoginHistoryRepository _loginHistoryRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AuthServiceDependencies _dep;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(
-            IUserRepository userRepository,
-            IPasswordHasher passwordHasher,
-            IJwtTokenGenerator jwtTokenGenerator,
-            IRefreshTokenRepository refreshTokenRepository,
-            IUserVerificationService userVerificationService,
-            IEmailService emailService,
-            ILoginHistoryRepository loginHistoryRepository,
-            IHttpContextAccessor httpContextAccessor)
+        public AuthService(AuthServiceDependencies dep)
         {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _refreshTokenRepository = refreshTokenRepository;
-            _userVerificationService = userVerificationService;
-            _emailService = emailService;
-            _loginHistoryRepository = loginHistoryRepository;
-            _httpContextAccessor = httpContextAccessor;
+            _dep = dep;
+            _jwtSettings = dep.JwtOptions.Value;
         }
 
         private string GetIp() =>
-            _httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+            _dep.HttpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
 
         private string GetAgent() =>
-            _httpContextAccessor?.HttpContext?.Request?.Headers["User-Agent"].ToString() ?? "";
+            _dep.HttpContextAccessor?.HttpContext?.Request?.Headers["User-Agent"].ToString() ?? "";
 
         public async Task<string> LoginAsync(LoginRequest request)
         {
             User? user = null;
             try
             {
-                user = await _userRepository.GetByEmailAsync(request.Email);
+                user = await _dep.UserRepository.GetByEmailAsync(request.Email)
+                    ?? throw AuthErrors.InvalidCredentials();
 
-                if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, request.Password))
-                    throw new Exception("Invalid email or password.");
+                if (!_dep.PasswordHasher.VerifyPassword(user.PasswordHash, request.Password))
+                    throw AuthErrors.InvalidCredentials();
+
 
                 if (user.Flag != "T")
-                    throw new Exception("Account is not verified yet.");
+                    throw AuthErrors.NotVerified();
 
                 if (!user.IsActive)
-                    throw new Exception("Account is deactivated. Please contact admin.");
+                    throw UserErrors.InactiveAccount();
 
                 var claims = new List<Claim>
                 {
@@ -66,46 +69,30 @@ namespace Application.Services
                     new Claim(ClaimTypes.Role, user.Role)
                 };
 
-                var accessToken = _jwtTokenGenerator.GenerateToken(claims);
+                var accessToken = _dep.JwtTokenGenerator.GenerateToken(claims, _jwtSettings.TokenExpiryMinutes);
+                var refreshTokenValue = Guid.NewGuid().ToString();
 
-                var refreshToken = new RefreshToken
+                await _dep.RefreshTokenRepository.InsertAsync(new RefreshToken
                 {
                     UserId = user.UserId,
-                    Token = Guid.NewGuid().ToString(),
+                    Token = refreshTokenValue,
                     CreatedAt = DateTime.UtcNow,
-                    ExpiryDate = DateTime.UtcNow.AddDays(7),
-                    Flag = "T"
-                };
-
-                await _refreshTokenRepository.InsertAsync(refreshToken);
-
-                user.LastLoginAt = DateTime.UtcNow;
-                await _userRepository.UpdateAsync(user);
-
-                // ✅ Log SUCCESS
-                await _loginHistoryRepository.InsertAsync(new LoginHistory
-                {
-                    UserId = user.UserId,
-                    IsSuccess = true,
-                    IpAddress = GetIp(),
-                    UserAgent = GetAgent(),
-                    Message = "Login success"
+                    ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays),
+                    Flag = "T",
+                    IPAddress = GetIp(),
+                    UserAgent = GetAgent()
                 });
 
-                return accessToken + "|" + refreshToken.Token;
+                user.LastLoginAt = DateTime.UtcNow;
+                await _dep.UserRepository.UpdateAsync(user);
+
+                await LogLogin(user.UserId, true, "Login success");
+
+                return accessToken + "|" + refreshTokenValue;
             }
             catch (Exception ex)
             {
-                // ✅ Log FAIL
-                await _loginHistoryRepository.InsertAsync(new LoginHistory
-                {
-                    UserId = user?.UserId ?? 0,
-                    IsSuccess = false,
-                    IpAddress = GetIp(),
-                    UserAgent = GetAgent(),
-                    Message = ex.Message
-                });
-
+                await LogLogin(user?.UserId ?? 0, false, ex.Message);
                 throw;
             }
         }
@@ -114,35 +101,32 @@ namespace Application.Services
         {
             try
             {
-                var existing = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
-                if (existing == null || existing.ExpiryDate < DateTime.UtcNow || existing.RevokedAt != null)
-                    throw new Exception("Invalid refresh token.");
+                var existing = await _dep.RefreshTokenRepository.GetByTokenAsync(refreshToken)
+                    ?? throw AuthErrors.InvalidRefreshToken();
 
-                var user = await _userRepository.GetByIdAsync(existing.UserId);
-                if (user == null)
-                    throw new Exception("User not found.");
+                if (existing.ExpiryDate < DateTime.UtcNow || existing.RevokedAt != null)
+                    throw AuthErrors.ExpiredOrRevokedToken();
+
+                var user = await _dep.UserRepository.GetByIdAsync(existing.UserId)
+                    ?? throw UserErrors.NotFound();
 
                 if (!user.IsActive)
-                    throw new Exception("Account is deactivated. Please contact admin.");
+                    throw UserErrors.InactiveAccount();
 
-                // Revoke old
                 existing.RevokedAt = DateTime.UtcNow;
                 var newRefreshToken = Guid.NewGuid().ToString();
                 existing.ReplacedByToken = newRefreshToken;
-                await _refreshTokenRepository.UpdateAsync(existing);
+                await _dep.RefreshTokenRepository.UpdateAsync(existing);
 
-                // Create new RefreshToken
-                var newToken = new RefreshToken
+                await _dep.RefreshTokenRepository.InsertAsync(new RefreshToken
                 {
                     UserId = user.UserId,
                     Token = newRefreshToken,
                     CreatedAt = DateTime.UtcNow,
                     ExpiryDate = DateTime.UtcNow.AddDays(7),
                     Flag = "T"
-                };
-                await _refreshTokenRepository.InsertAsync(newToken);
+                });
 
-                // New AccessToken
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
@@ -150,17 +134,9 @@ namespace Application.Services
                     new Claim(ClaimTypes.Role, user.Role)
                 };
 
-                var newAccessToken = _jwtTokenGenerator.GenerateToken(claims);
+                var newAccessToken = _dep.JwtTokenGenerator.GenerateToken(claims, _jwtSettings.TokenExpiryMinutes);
 
-                // ✅ Log SUCCESS
-                await _loginHistoryRepository.InsertAsync(new LoginHistory
-                {
-                    UserId = user.UserId,
-                    IsSuccess = true,
-                    IpAddress = GetIp(),
-                    UserAgent = GetAgent(),
-                    Message = $"RefreshToken success. OldToken={refreshToken}, NewToken={newRefreshToken}"
-                });
+                await LogLogin(user.UserId, true, $"Refresh token success. Old={refreshToken}, New={newRefreshToken}");
 
                 return new AuthResultDto
                 {
@@ -170,40 +146,42 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // ✅ Log FAIL
-                await _loginHistoryRepository.InsertAsync(new LoginHistory
-                {
-                    UserId = 0,
-                    IsSuccess = false,
-                    IpAddress = GetIp(),
-                    UserAgent = GetAgent(),
-                    Message = $"RefreshToken failed: {ex.Message}"
-                });
-
+                await LogLogin(0, false, $"Refresh token failed: {ex.Message}");
                 throw;
             }
         }
 
         public async Task ResendVerificationAsync(ResendVerificationRequest request, string domain)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Email);
-            if (user == null)
-                throw new Exception("Email not found!");
+            var user = await _dep.UserRepository.GetByEmailAsync(request.Email)
+                ?? throw UserErrors.NotFound("For resend verification");
 
             if (user.Flag == "T")
-                throw new Exception("Account is already verified.");
+                throw UserErrors.AlreadyVerified();
 
             if (!user.IsActive)
-                throw new Exception("Account is deactivated. Please contact admin.");
+                throw UserErrors.InactiveAccount();
 
-            var token = await _userVerificationService.CreateVerificationTokenAsync(user.UserId);
+            var token = await _dep.UserVerificationService.CreateVerificationTokenAsync(user.UserId);
             var verifyLink = $"{domain}/api/v1/auth/verify?token={token}";
-            await _emailService.SendVerificationEmailAsync(user.Email, verifyLink);
+            await _dep.EmailService.SendVerificationEmailAsync(user.Email, verifyLink);
         }
 
         public async Task VerifyEmailTokenAsync(string token)
         {
-            await _userVerificationService.VerifyTokenAsync(token);
+            await _dep.UserVerificationService.VerifyTokenAsync(token);
+        }
+
+        private async Task LogLogin(int userId, bool isSuccess, string message)
+        {
+            await _dep.LoginHistoryRepository.InsertAsync(new LoginHistory
+            {
+                UserId = userId,
+                IsSuccess = isSuccess,
+                IpAddress = GetIp(),
+                UserAgent = GetAgent(),
+                Message = message
+            });
         }
     }
 }

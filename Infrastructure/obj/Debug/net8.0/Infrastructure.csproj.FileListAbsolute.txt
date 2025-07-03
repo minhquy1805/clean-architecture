@@ -3,8 +3,10 @@ D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\ne
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Infrastructure.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Application.dll
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Domain.dll
+D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Shared.dll
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Application.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Domain.pdb
+D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\bin\Debug\net8.0\Shared.pdb
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.AssemblyReference.cache
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\obj\Debug\net8.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 D:\Commercial News\Clean Architecture\CommercialNews\Infrastructure\obj\Debug\net8.0\Infrastructure.AssemblyInfoInputs.cache

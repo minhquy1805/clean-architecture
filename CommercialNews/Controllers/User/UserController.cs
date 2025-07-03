@@ -1,8 +1,6 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using CommercialNews.Responses;
+﻿using Microsoft.AspNetCore.Mvc;
+using Application.Interfaces.Services;
+using Application.DTOs.Users.Requests;
 
 namespace CommercialNews.Controllers.User
 {
@@ -23,8 +21,13 @@ namespace CommercialNews.Controllers.User
         [HttpGet("me")]
         public async Task<ActionResult> GetProfile()
         {
-            int userId = CurrentUserId;
+            if (CurrentUserId is not int userId)
+                return Unauthorized(BadRequestResponse("Unauthorized: Missing or invalid user ID"));
+
             var user = await _userService.GetByIdAsync(userId);
+            if (user == null)
+                return NotFoundResponse("User not found");
+
             return OkResponse(user, "Profile fetched successfully!");
         }
 
@@ -32,10 +35,11 @@ namespace CommercialNews.Controllers.User
         /// ✅ Update own profile
         /// </summary>
         [HttpPut("me")]
-        public async Task<ActionResult> UpdateMe([FromBody] UserDto dto)
+        public async Task<IActionResult> UpdateMe([FromBody] UpdateOwnProfileRequest dto)
         {
-            int userId = CurrentUserId;
-            dto.UserId = userId;
+            if (CurrentUserId is not int userId)
+                return Unauthorized(BadRequestResponse("Unauthorized: Missing or invalid user ID"));
+
             await _userService.UpdateOwnProfileAsync(userId, dto);
             return OkResponse<string>(null!, "Profile updated successfully!");
         }
@@ -46,7 +50,9 @@ namespace CommercialNews.Controllers.User
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
-            int userId = CurrentUserId;
+            if (CurrentUserId is not int userId)
+                return Unauthorized(BadRequestResponse("Unauthorized: Missing or invalid user ID"));
+
             await _userService.ChangePasswordAsync(userId, request);
             return OkResponse<string>(null!, "Password changed successfully!");
         }
