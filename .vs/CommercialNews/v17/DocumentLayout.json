@@ -3,60 +3,12 @@
   "WorkspaceRootPath": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\admin\\adminusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\admin\\adminusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1879313B-5E8B-465C-B7C1-D48E5B1EC932}|Infrastructure\\Infrastructure.csproj|d:\\commercial news\\clean architecture\\commercialnews\\infrastructure\\backgroundservices\\rabbitmqconsumerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1879313B-5E8B-465C-B7C1-D48E5B1EC932}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\backgroundservices\\rabbitmqconsumerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\admin\\adminloginhistorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\admin\\adminloginhistorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\admin\\adminauditcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\admin\\adminauditcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\extensions\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\extensions\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|d:\\commercial news\\clean architecture\\commercialnews\\commercialnews\\errors\\apiexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06DC993A-EA0D-441B-AE5C-0F69B43F7B3C}|CommercialNews\\CommercialNews.csproj|solutionrelative:commercialnews\\errors\\apiexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\mappings\\usermapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\mappings\\usermapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\mappings\\loginhistorymapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\mappings\\loginhistorymapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|d:\\commercial news\\clean architecture\\commercialnews\\application\\mappings\\auditmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFCDC925-0726-41CD-90D4-6CDB2E73C012}|Application\\Application.csproj|solutionrelative:application\\mappings\\auditmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1879313B-5E8B-465C-B7C1-D48E5B1EC932}|Infrastructure\\Infrastructure.csproj|d:\\commercial news\\clean architecture\\commercialnews\\infrastructure\\messaging\\consumers\\rabbitmqloginhistoryconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1879313B-5E8B-465C-B7C1-D48E5B1EC932}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\messaging\\consumers\\rabbitmqloginhistoryconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -71,172 +23,28 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AdminUserController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminUserController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\Admin\\AdminUserController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminUserController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\Admin\\AdminUserController.cs",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAswHcAAAABAAAAAAAAAA==",
+              "Title": "RabbitMqConsumerService.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Infrastructure\\BackgroundServices\\RabbitMqConsumerService.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\BackgroundServices\\RabbitMqConsumerService.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Infrastructure\\BackgroundServices\\RabbitMqConsumerService.cs",
+              "RelativeToolTip": "Infrastructure\\BackgroundServices\\RabbitMqConsumerService.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAwwBwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:18:45.647Z",
+              "WhenOpened": "2025-07-24T04:28:46.901Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AdminLoginHistoryController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminLoginHistoryController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\Admin\\AdminLoginHistoryController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminLoginHistoryController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\Admin\\AdminLoginHistoryController.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAkwDYAAAABAAAAAAAAAA==",
+              "Title": "RabbitMqLoginHistoryConsumer.cs",
+              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Infrastructure\\Messaging\\Consumers\\RabbitMqLoginHistoryConsumer.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Messaging\\Consumers\\RabbitMqLoginHistoryConsumer.cs",
+              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Infrastructure\\Messaging\\Consumers\\RabbitMqLoginHistoryConsumer.cs",
+              "RelativeToolTip": "Infrastructure\\Messaging\\Consumers\\RabbitMqLoginHistoryConsumer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:17:15.256Z",
+              "WhenOpened": "2025-07-24T04:28:34.434Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AdminAuditController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminAuditController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\Admin\\AdminAuditController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\Admin\\AdminAuditController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\Admin\\AdminAuditController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAzwDQAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:15:38.827Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\User\\UserController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\User\\UserController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\User\\UserController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\User\\UserController.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAYwDwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:13:14.476Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BaseController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\BaseController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\BaseController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\BaseController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\BaseController.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAzwCwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:07:43.601Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "CommercialNews\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAowG4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:07:40.861Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ApiResponse.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Responses\\ApiResponse.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Responses\\ApiResponse.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Responses\\ApiResponse.cs",
-              "RelativeToolTip": "CommercialNews\\Responses\\ApiResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:05:31.215Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ExceptionMiddleware.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Middleware\\ExceptionMiddleware.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Middleware\\ExceptionMiddleware.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Middleware\\ExceptionMiddleware.cs",
-              "RelativeToolTip": "CommercialNews\\Middleware\\ExceptionMiddleware.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwBwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T15:02:30.98Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ServiceCollectionExtensions.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Extensions\\ServiceCollectionExtensions.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Extensions\\ServiceCollectionExtensions.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Extensions\\ServiceCollectionExtensions.cs",
-              "RelativeToolTip": "CommercialNews\\Extensions\\ServiceCollectionExtensions.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:59:01.174Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "ApiException.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Errors\\ApiException.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Errors\\ApiException.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Errors\\ApiException.cs",
-              "RelativeToolTip": "CommercialNews\\Errors\\ApiException.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:54:22.485Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Program.cs",
-              "RelativeDocumentMoniker": "CommercialNews\\Program.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\CommercialNews\\Program.cs",
-              "RelativeToolTip": "CommercialNews\\Program.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAqwFwAAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:48:14.317Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "UserMapper.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\UserMapper.cs",
-              "RelativeDocumentMoniker": "Application\\Mappings\\UserMapper.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\UserMapper.cs",
-              "RelativeToolTip": "Application\\Mappings\\UserMapper.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAQwDEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:47:41.695Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "LoginHistoryMapper.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\LoginHistoryMapper.cs",
-              "RelativeDocumentMoniker": "Application\\Mappings\\LoginHistoryMapper.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\LoginHistoryMapper.cs",
-              "RelativeToolTip": "Application\\Mappings\\LoginHistoryMapper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:45:51.525Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "AuditMapper.cs",
-              "DocumentMoniker": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\AuditMapper.cs",
-              "RelativeDocumentMoniker": "Application\\Mappings\\AuditMapper.cs",
-              "ToolTip": "D:\\Commercial News\\Clean Architecture\\CommercialNews\\Application\\Mappings\\AuditMapper.cs",
-              "RelativeToolTip": "Application\\Mappings\\AuditMapper.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAQwEIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T14:44:18.168Z"
             }
           ]
         }

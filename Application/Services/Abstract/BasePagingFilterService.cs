@@ -84,8 +84,11 @@ namespace Application.Services.Abstract
         protected abstract int GetDtoId(TDto dto);
 
         // 🔹 JSON serialize để audit
-        protected string SerializeForAudit(object obj) => JsonSerializer.Serialize(obj, _auditOptions);
-        protected string SerializePasswordForAudit(string label, string hash) => $"{label}: {hash}";
+        protected string SerializeForAudit(object obj)
+     => JsonSerializer.Serialize(obj, _auditOptions);
+
+        protected string SerializePasswordForAudit(string label, string hash)
+            => $"{label}: {hash}";
 
         private static readonly JsonSerializerOptions _auditOptions = new()
         {

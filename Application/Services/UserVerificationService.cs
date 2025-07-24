@@ -59,5 +59,10 @@ namespace Application.Services
             user.Flag = "T";
             await _userRepo.UpdateAsync(user);
         }
+
+        public Task<UserVerification?> GetByTokenAsync(string token)
+        {
+            return _verificationRepo.GetByTokenAsync(token);
+        }
     }
 }

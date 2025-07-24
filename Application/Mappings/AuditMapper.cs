@@ -10,7 +10,7 @@ namespace Application.Mappings
         {
             return new UserAuditDto
             {
-                AuditId = entity.AuditId,
+                AuditId = entity.Id,
                 UserId = entity.UserId,
                 Action = entity.Action,
                 OldValue = entity.OldValue,
@@ -33,7 +33,7 @@ namespace Application.Mappings
         {
             return new UserAudit
             {
-                AuditId = dto.AuditId,
+                Id = dto.AuditId,
                 UserId = dto.UserId,
                 Action = dto.Action,
                 OldValue = dto.OldValue,

@@ -10,5 +10,7 @@ namespace Application.Interfaces
     {
         Task SendVerificationEmailAsync(string toEmail, string verificationLink);
         Task SendResetPasswordEmailAsync(string toEmail, string link);
+
+        Task SendEmailAsync(string to, string subject, string bodyHtml);
     }
 }

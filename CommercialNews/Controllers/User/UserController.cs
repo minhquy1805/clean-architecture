@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.Services;
 using Application.DTOs.Users.Requests;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommercialNews.Controllers.User
 {
+    [Authorize]
     [Route("api/v1/user")]
     [ApiController]
     public class UserController : BaseController
@@ -15,9 +17,6 @@ namespace CommercialNews.Controllers.User
             _userService = userService;
         }
 
-        /// <summary>
-        /// ✅ Get profile of the logged-in user.
-        /// </summary>
         [HttpGet("me")]
         public async Task<ActionResult> GetProfile()
         {
@@ -31,9 +30,6 @@ namespace CommercialNews.Controllers.User
             return OkResponse(user, "Profile fetched successfully!");
         }
 
-        /// <summary>
-        /// ✅ Update own profile
-        /// </summary>
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMe([FromBody] UpdateOwnProfileRequest dto)
         {
@@ -44,9 +40,6 @@ namespace CommercialNews.Controllers.User
             return OkResponse<string>(null!, "Profile updated successfully!");
         }
 
-        /// <summary>
-        /// ✅ Change password
-        /// </summary>
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
@@ -58,3 +51,4 @@ namespace CommercialNews.Controllers.User
         }
     }
 }
+

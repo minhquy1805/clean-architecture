@@ -10,7 +10,7 @@ namespace CommercialNews.Controllers.Admin
 {
     [Route("api/v1/admin/user")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    
     public class AdminUserController : BaseController
     {
         private readonly IUserService _userService;
@@ -24,6 +24,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Get User by Id (Admin view)
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize(Policy = "User:View")]
         public async Task<ActionResult> GetById(int id)
         {
             var user = await _userService.GetByIdAsync(id);
@@ -36,6 +37,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Get all users
         /// </summary>
         [HttpGet("all")]
+        [Authorize(Policy = "User:View")]
         public async Task<ActionResult> GetAll()
         {
             var users = await _userService.GetAllAsync();
@@ -46,6 +48,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Get users with paging & filter
         /// </summary>
         [HttpPost("paging")]
+        [Authorize(Policy = "User:View")]
         public async Task<IActionResult> GetPaging([FromBody] UserFilterDto filter)
         {
             
@@ -68,6 +71,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Get users for dropdown
         /// </summary>
         [HttpGet("dropdown")]
+        [Authorize(Policy = "User:View")]
         public async Task<ActionResult> GetDropDownList()
         {
             var dropdown = await _userService.GetDropDownListDataAsync();
@@ -78,6 +82,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Update user (Admin)
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Policy = "User:Update")]
         public async Task<ActionResult> Update(int id, [FromBody] UserDto dto)
         {
             if (id != dto.UserId)
@@ -91,6 +96,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Soft Delete user: IsActive = false & revoke token
         /// </summary>
         [HttpPut("soft-delete/{id}")]
+        [Authorize(Policy = "User:Delete")]
         public async Task<IActionResult> SoftDelete(int id)
         {
             await _userService.SoftDeleteUserAsync(id);
@@ -101,6 +107,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Restore user: IsActive = true
         /// </summary>
         [HttpPut("restore/{id}")]
+        [Authorize(Policy = "User:Update")]
         public async Task<IActionResult> Restore(int id)
         {
             await _userService.RestoreUserAsync(id);
@@ -111,6 +118,7 @@ namespace CommercialNews.Controllers.Admin
         /// ✅ Delete user (Admin)
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Policy = "User:Delete")]
         public async Task<ActionResult> Delete(int id)
         {
             await _userService.DeleteAsync(id);

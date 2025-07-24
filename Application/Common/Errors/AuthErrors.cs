@@ -20,5 +20,7 @@ namespace Application.Common.Errors
 
         public static AppException ExpiredOrRevokedToken() =>
             AppExceptionHelper.Unauthorized("Token expired or revoked.", "TOKEN_EXPIRED");
+
+        
     }
 }

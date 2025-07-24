@@ -1,5 +1,5 @@
-﻿using Application.DTOs;
-using Application.DTOs.LoginHistories;
+﻿using Application.DTOs.LoginHistories;
+using Application.Interfaces.Redis.Caching;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappings;
@@ -9,39 +9,73 @@ using Domain.Entities;
 namespace Application.Services
 {
     public class LoginHistoryService
-        : BasePagingFilterService<LoginHistoryDto, LoginHistory, LoginHistoryFilterDto>, ILoginHistoryService
+         : BasePagingFilterServiceMongo<LoginHistoryDto, LoginHistory, LoginHistoryFilterDto>, ILoginHistoryService
     {
-        private readonly ILoginHistoryRepository _repo;
+        private readonly ILoginHistoryRepository _loginHistoryRepository;
+        private readonly ILoginHistoryCacheService _cache;
 
-        public LoginHistoryService(ILoginHistoryRepository repo) : base(repo)
+        public LoginHistoryService(
+             ILoginHistoryRepository loginHistoryRepository,
+             ILoginHistoryCacheService cache
+         )
+            : base(loginHistoryRepository)
         {
-            _repo = repo;
+            _loginHistoryRepository = loginHistoryRepository;
+            _cache = cache;
         }
 
-        protected override LoginHistoryDto MapToDto(LoginHistory entity) => LoginHistoryMapper.ToDto(entity);
+        protected override string GetDtoId(LoginHistoryDto dto)
+        {
+            return dto.LoginHistoryId;
+        }
 
-        protected override LoginHistory MapToEntity(LoginHistoryDto dto) => LoginHistoryMapper.ToEntity(dto);
+        protected override string[] GetAllowedSortFields()
+        {
+            return LoginHistoryFilterDto.AllowedSortFields;
+        }
 
-        protected override int GetDtoId(LoginHistoryDto dto) => dto.LoginId;
+        protected override LoginHistoryDto MapToDto(LoginHistory entity)
+        {
+            return LoginHistoryMapper.ToDto(entity);
+        }
 
-        protected override string[] GetAllowedSortFields() =>
-            new[] { "LoginId", "UserId", "CreatedAt", "IsSuccess" };
+        protected override LoginHistory MapToEntity(LoginHistoryDto dto)
+        {
+            return LoginHistoryMapper.ToEntity(dto);
+        }
 
         public async Task<IEnumerable<LoginHistoryDto>> GetByUserIdAsync(int userId)
         {
-            var logs = await _repo.GetByUserIdAsync(userId);
-            return logs.Select(LoginHistoryMapper.ToDto);
+            var entities = await _loginHistoryRepository.GetByUserIdAsync(userId);
+            return entities.Select(MapToDto);
+        }
+
+        public async Task<LoginHistoryDto?> GetLastLoginAsync(int userId)
+        {
+            // ✅ Check cache first
+            var cached = await _cache.GetLastLoginAsync(userId);
+            if (cached != null)
+                return cached;
+
+            // ❌ Not found in cache → get from DB
+            var entity = await _loginHistoryRepository.GetLastLoginAsync(userId);
+            if (entity == null) return null;
+
+            var dto = MapToDto(entity);
+            await _cache.SetLastLoginAsync(userId, dto); // ✅ Save to cache
+
+            return dto;
         }
 
         public override async Task<IEnumerable<LoginHistoryDto>> SelectSkipAndTakeWhereDynamicAsync(LoginHistoryFilterDto filter)
         {
-            var entities = await _repo.SelectSkipAndTakeWhereDynamicAsync(filter);
-            return entities.Select(LoginHistoryMapper.ToDto);
+            var entities = await _loginHistoryRepository.SelectSkipAndTakeWhereDynamicAsync(filter);
+            return entities.Select(MapToDto);
         }
 
         public override Task<int> GetRecordCountWhereDynamicAsync(LoginHistoryFilterDto filter)
         {
-            return _repo.GetRecordCountWhereDynamicAsync(filter);
+            return _loginHistoryRepository.GetRecordCountWhereDynamicAsync(filter);
         }
     }
 }

@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTOs.Users.Responses
+﻿namespace Application.DTOs.Users.Responses
 {
     public class UserDto
     {
         public int UserId { get; set; }
         public string FullName { get; set; } = default!;
         public string Email { get; set; } = default!;
-        public string Role { get; set; } = default!;
+        public string PasswordHash { get; set; } = default!;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }

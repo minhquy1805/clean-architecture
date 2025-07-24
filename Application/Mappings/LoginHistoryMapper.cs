@@ -9,11 +9,14 @@ namespace Application.Mappings
         {
             return new LoginHistoryDto
             {
-                LoginId = entity.LoginId,
+                LoginHistoryId = entity.LoginHistoryId,
                 UserId = entity.UserId,
                 IsSuccess = entity.IsSuccess,
                 IpAddress = entity.IpAddress,
                 UserAgent = entity.UserAgent,
+                Device = entity.Device,
+                OS = entity.OS,
+                Browser = entity.Browser,
                 Message = entity.Message,
                 CreatedAt = entity.CreatedAt
             };
@@ -23,11 +26,14 @@ namespace Application.Mappings
         {
             return new LoginHistory
             {
-                LoginId = dto.LoginId,
+                LoginHistoryId = dto.LoginHistoryId,
                 UserId = dto.UserId,
                 IsSuccess = dto.IsSuccess,
                 IpAddress = dto.IpAddress,
                 UserAgent = dto.UserAgent,
+                Device = dto.Device,
+                OS = dto.OS,
+                Browser = dto.Browser,
                 Message = dto.Message,
                 CreatedAt = dto.CreatedAt
             };

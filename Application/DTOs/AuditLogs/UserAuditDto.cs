@@ -2,7 +2,7 @@
 {
     public class UserAuditDto
     {
-        public int AuditId { get; set; }
+        public string AuditId { get; set; } = default!;
         public int UserId { get; set; }
         public string Action { get; set; } = default!;
         public string? OldValue { get; set; }

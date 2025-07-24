@@ -17,6 +17,22 @@
   },
   {
     "ContainingType": "CommercialNews.Controllers.Admin.AdminAuditController",
+    "Method": "GetLastAuditInfo",
+    "RelativePath": "api/v1/admin/audit/last/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminAuditController",
     "Method": "GetPaging",
     "RelativePath": "api/v1/admin/audit/paging",
     "HttpMethod": "POST",
@@ -49,6 +65,22 @@
   },
   {
     "ContainingType": "CommercialNews.Controllers.Admin.AdminLoginHistoryController",
+    "Method": "GetLastLogin",
+    "RelativePath": "api/v1/admin/login-history/last-login/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminLoginHistoryController",
     "Method": "GetPaging",
     "RelativePath": "api/v1/admin/login-history/paging",
     "HttpMethod": "POST",
@@ -58,6 +90,370 @@
       {
         "Name": "filter",
         "Type": "Application.DTOs.LoginHistories.LoginHistoryFilterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminPermissionController",
+    "Method": "GetPermissionsPaged",
+    "RelativePath": "api/v1/admin/permissions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "PermissionId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Module",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Action",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Flag",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Start",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "NumberOfRows",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortDirection",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CurrentPage",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Skip",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Take",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminPermissionController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/admin/permissions/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminPermissionController",
+    "Method": "GetAllPermissions",
+    "RelativePath": "api/v1/admin/permissions/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRolePermissionController",
+    "Method": "GetPermissionsByRoleId",
+    "RelativePath": "api/v1/admin/role-permissions/{roleId}/permissions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roleId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRolePermissionController",
+    "Method": "AddPermissionToRole",
+    "RelativePath": "api/v1/admin/role-permissions/assign",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.RolePermissions.RolePermissionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRolePermissionController",
+    "Method": "RemovePermissionFromRole",
+    "RelativePath": "api/v1/admin/role-permissions/revoke",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.RolePermissions.RolePermissionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRoleController",
+    "Method": "GetRolesPaged",
+    "RelativePath": "api/v1/admin/roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "RoleId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "RoleName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Flag",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Start",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "NumberOfRows",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SortDirection",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CurrentPage",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Skip",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Take",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRoleController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/admin/roles/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminRoleController",
+    "Method": "GetAllRoles",
+    "RelativePath": "api/v1/admin/roles/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedAdminRolePermissionsAsync",
+    "RelativePath": "api/v1/admin/seeder/admin-role-permissions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.Seeding.PermissionSeedRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedModeratorRolePermissionsAsync",
+    "RelativePath": "api/v1/admin/seeder/moderator-role-permissions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedPermissionsAsync",
+    "RelativePath": "api/v1/admin/seeder/permissions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.Seeding.PermissionSeedRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedRoleAsync",
+    "RelativePath": "api/v1/admin/seeder/roles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.Seeding.RoleSeedRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedAllAsync",
+    "RelativePath": "api/v1/admin/seeder/seed-all",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminSeederController",
+    "Method": "SeedUserRoleAsync",
+    "RelativePath": "api/v1/admin/seeder/user-role",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.Seeding.UserRoleSeedRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminUserRoleController",
+    "Method": "GetRolesByUserId",
+    "RelativePath": "api/v1/admin/user-roles/{userId}/roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminUserRoleController",
+    "Method": "AssignRoleToUser",
+    "RelativePath": "api/v1/admin/user-roles/assign",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.UserRoles.UserRoleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AdminUserRoleController",
+    "Method": "RevokeRoleFromUser",
+    "RelativePath": "api/v1/admin/user-roles/revoke",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Application.DTOs.UserRoles.UserRoleDto",
         "IsRequired": true
       }
     ],
@@ -180,6 +576,59 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AuditMonitoringController",
+    "Method": "ClearAll",
+    "RelativePath": "api/v1/audit-monitoring/clear",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "byDate",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AuditMonitoringController",
+    "Method": "CountTrackedActions",
+    "RelativePath": "api/v1/audit-monitoring/count",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "byDate",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CommercialNews.Controllers.Admin.AuditMonitoringController",
+    "Method": "GetTopActions",
+    "RelativePath": "api/v1/audit-monitoring/top-actions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "top",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "byDate",
+        "Type": "System.Boolean",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

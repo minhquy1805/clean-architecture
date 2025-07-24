@@ -3,6 +3,8 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using System.Net.Mail;
+using System.Net;
 
 namespace Infrastructure.Services.Email
 {
@@ -26,7 +28,7 @@ namespace Infrastructure.Services.Email
             // Replace placeholder
             htmlBody = htmlBody.Replace("{{VerificationLink}}", verificationLink);
 
-            await SendEmailInternalAsync(toEmail, subject, htmlBody);
+            await SendEmailAsync(toEmail, subject, htmlBody);
         }
 
         public async Task SendResetPasswordEmailAsync(string toEmail, string resetLink)
@@ -40,11 +42,11 @@ namespace Infrastructure.Services.Email
             // Replace placeholder
             htmlBody = htmlBody.Replace("{{ResetLink}}", resetLink);
 
-            await SendEmailInternalAsync(toEmail, subject, htmlBody);
+            await SendEmailAsync(toEmail, subject, htmlBody);
         }
 
-        // ✅ Helper dùng chung
-        private async Task SendEmailInternalAsync(string toEmail, string subject, string htmlBody)
+        // ✅ Gửi email dùng MailKit
+        public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config["Email:From"]));
@@ -56,15 +58,17 @@ namespace Infrastructure.Services.Email
                 Text = htmlBody
             };
 
-            using var smtp = new SmtpClient();
+            using var smtp = new MailKit.Net.Smtp.SmtpClient();
             await smtp.ConnectAsync(
                 _config["Email:SmtpHost"],
-                int.Parse(_config["Email:SmtpPort"]!),
-                SecureSocketOptions.StartTls);
+                int.Parse(_config["Email:SmtpPort"] ?? "587"),
+                SecureSocketOptions.StartTls
+            );
 
             await smtp.AuthenticateAsync(
                 _config["Email:SmtpUser"],
-                _config["Email:SmtpPass"]);
+                _config["Email:SmtpPass"]
+            );
 
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);

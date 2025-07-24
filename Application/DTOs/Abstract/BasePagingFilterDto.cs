@@ -21,5 +21,12 @@ namespace Application.DTOs.Abstract
         [IgnoreSqlParam]
         public int CurrentPage { get; set; } = 1;
 
+
+        // ✅ Bổ sung cho MongoDB
+        [IgnoreSqlParam]
+        public int Skip => Start;
+
+        [IgnoreSqlParam]
+        public int Take => NumberOfRows;
     }
 }

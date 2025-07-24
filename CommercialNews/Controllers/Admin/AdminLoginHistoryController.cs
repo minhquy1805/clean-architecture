@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Helpers;
 using Application.Interfaces.Services;
-using Application.Filters;
 using Application.DTOs.LoginHistories;
 
 namespace CommercialNews.Controllers.Admin
 {
+    [Authorize(Policy = "Permission:LoginHistory.View")]
     [Route("api/v1/admin/login-history")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class AdminLoginHistoryController : BaseController
     {
         private readonly ILoginHistoryService _loginHistoryService;
@@ -26,7 +25,7 @@ namespace CommercialNews.Controllers.Admin
         public async Task<IActionResult> GetByUserId(int userId)
         {
             var logs = await _loginHistoryService.GetByUserIdAsync(userId);
-            return OkResponse(logs, "Fetched login history by user id.");
+            return OkResponse(logs, "Fetched login history by user ID.");
         }
 
         /// <summary>
@@ -35,11 +34,8 @@ namespace CommercialNews.Controllers.Admin
         [HttpPost("paging")]
         public async Task<IActionResult> GetPaging([FromBody] LoginHistoryFilterDto filter)
         {
-            
-            // Lấy dữ liệu và tổng số bản ghi
             var (data, totalRecords) = await _loginHistoryService.GetPagingAsync(filter);
 
-            // Trả về kết quả kèm thông tin phân trang
             var pagination = new
             {
                 currentPage = filter.CurrentPage,
@@ -49,7 +45,18 @@ namespace CommercialNews.Controllers.Admin
                 pagesToShow = GridConfig.NumberOfPagesToShow
             };
 
-            return Ok(new { data, pagination });
+            return OkResponse(new { data, pagination }, "Fetched login history with paging.");
+        }
+
+        /// <summary>
+        /// ✅ Get latest login of a user
+        /// </summary>
+        [HttpGet("last-login/{userId}")]
+        public async Task<IActionResult> GetLastLogin(int userId)
+        {
+            var lastLogin = await _loginHistoryService.GetLastLoginAsync(userId);
+            return OkResponse(lastLogin, "Fetched last login history.");
         }
     }
 }
+

@@ -67,6 +67,14 @@ namespace Infrastructure.Data.Helpers
 
             var db = GetMsSqlDatabase(connectionString, sql, parameters, commandType);
 
+            foreach (var param in parameters)
+            {
+                if (param.Value is DateTime dt && dt < (DateTime)System.Data.SqlTypes.SqlDateTime.MinValue)
+                {
+                    param.Value = DBNull.Value;
+                }
+            }
+
             using (db.SqlConnection)
             {
                 await db.SqlConnection.OpenAsync().ConfigureAwait(false);

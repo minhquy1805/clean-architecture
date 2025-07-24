@@ -1,6 +1,9 @@
 ﻿using Infrastructure.Abstractions.Metadata;
 using Infrastructure.Metadata.Users;
 using Domain.Entities;
+using Domain.Entities.AccessControl;
+using Infrastructure.Metadata.Role;
+using Infrastructure.Metadata.Permissions;
 
 namespace Infrastructure.Metadata.Bootstrap
 {
@@ -12,6 +15,17 @@ namespace Infrastructure.Metadata.Bootstrap
                 UserSqlMetadata.CreateFields,
                 UserSqlMetadata.UpdateFields
             );
+
+            MetadataRegistry.Register<Domain.Entities.AccessControl.Role>(
+                RoleSqlMetadata.CreateFields,
+                RoleSqlMetadata.UpdateFields
+            );
+
+            MetadataRegistry.Register<Permission>(
+                PermissionSqlMetadata.CreateFields,
+                PermissionSqlMetadata.UpdateFields
+            );
         }
+
     }
 }

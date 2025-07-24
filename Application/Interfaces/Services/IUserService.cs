@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Users.Filters;
+﻿using Application.DTOs;
+using Application.DTOs.Users.Filters;
 using Application.DTOs.Users.Requests;
 using Application.DTOs.Users.Responses;
 using Application.Interfaces.Abstract;
@@ -28,7 +29,7 @@ namespace Application.Interfaces.Services
 
         // 📌 Quên mật khẩu & reset
         Task ResetPasswordAsync(ResetPasswordRequest request);
-        Task ForgotPasswordAsync(string email, string verifyLinkBase);
+        Task ForgotPasswordAsync(ForgotPasswordRequest request, string domain);
 
         // 📌 Xoá mềm và khôi phục
         Task SoftDeleteUserAsync(int userId);

@@ -3,8 +3,11 @@ using Application.Interfaces.Abstract;
 
 namespace Application.Interfaces.Services
 {
-    public interface ILoginHistoryService : IBasePagingFilterService<LoginHistoryDto, LoginHistoryFilterDto>
+    public interface ILoginHistoryService
+        : IBasePagingFilterServiceMongo<LoginHistoryDto, LoginHistoryFilterDto>
     {
         Task<IEnumerable<LoginHistoryDto>> GetByUserIdAsync(int userId);
+
+        Task<LoginHistoryDto?> GetLastLoginAsync(int userId);
     }
 }

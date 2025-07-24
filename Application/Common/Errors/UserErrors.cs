@@ -1,7 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Helpers;
 
-
 namespace Application.Common.Errors
 {
     public static class UserErrors
@@ -29,5 +28,11 @@ namespace Application.Common.Errors
 
         public static AppException InactiveAccount() =>
             AppExceptionHelper.Forbidden("Account is deactivated.", "ACCOUNT_INACTIVE");
+
+        public static AppException AlreadyActive() =>
+            AppExceptionHelper.BadRequest("Account is already active.", "ACCOUNT_ALREADY_ACTIVE");
+
+        public static AppException AlreadyDeactivated() =>
+            AppExceptionHelper.BadRequest("Account is already deactivated.", "ACCOUNT_ALREADY_DEACTIVATED");
     }
 }

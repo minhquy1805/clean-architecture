@@ -8,12 +8,23 @@ using Infrastructure.Metadata.Bootstrap;
 using Application.Filters;
 using Application.Validators.Users;
 using Application.DTOs.Auth.Jwt;
+using Infrastructure.Seeding;
+using Application.Interfaces.Services.AccessControl;
+using Infrastructure.Authorization;
+using Domain.Constants;
+using Infrastructure.Repositories.Mongo;
+using Prometheus;
+using Infrastructure.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Application.Interfaces.Messaging;
+using Application.DTOs.Email;
 
 namespace CommercialNews
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +47,22 @@ namespace CommercialNews
             // get the connection string from appsettings.json
             string connectionString = builder.Configuration.GetValue<string>("Settings:ConnectionString")!;
 
+            // get the connection string from appsettings.json mongoddb
+            builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+
+            // register services for dependency injection (di)
+            builder.Services.AddSingleton<MongoDbContext>();
+
+            // Optional: tiện inject trực tiếp IMongoDatabase nếu cần
+            builder.Services.AddScoped(sp => sp.GetRequiredService<MongoDbContext>().Database);
+
+            builder.Services.Configure<DefaultAdminSettings>(
+                 builder.Configuration.GetSection("DefaultAdmin"));
+
+
             // register services for dependency injection (di)
             builder.Services.AddSingleton(connectionString);
-            builder.Services.AddProjectServices();
+            builder.Services.AddProjectServices(builder.Configuration);
 
             builder.Services.AddHttpContextAccessor();
 
@@ -72,6 +96,10 @@ namespace CommercialNews
             builder.Services.AddInMemoryRateLimiting();
             builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration["Redis:ConnectionString"];
+            });
 
             //Add Authorization
             builder.Services.AddAuthorization();
@@ -88,11 +116,49 @@ namespace CommercialNews
                     });
             });
 
+            builder.Services.AddAuthorization(options =>
+            {
+                foreach (var permission in PermissionConstants.All)
+                {
+                    options.AddPolicy(permission, policy =>
+                        policy.Requirements.Add(new PermissionRequirement(permission)));
+                }
+            });
+
+            builder.Services.AddPermissionPolicies();
+
+            builder.Services.AddProjectHealthChecks(builder.Configuration);
+
             //Build App
             var app = builder.Build();
             app.UseMiddleware<CommercialNews.Middleware.ExceptionMiddleware>();
 
-            // Configure the HTTP request pipeline.
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                // ✅ Gọi Seeder
+                var roleSeeder = services.GetRequiredService<RoleSeederService>();
+                await roleSeeder.SeedDefaultRolesAsync();
+
+                var permissionSeeder = services.GetRequiredService<PermissionSeederService>();
+                await permissionSeeder.SeedDefaultPermissionsAsync();
+
+                var userRoleSeeder = services.GetRequiredService<UserRoleSeederService>();
+                await userRoleSeeder.SeedAdminUserRoleAsync();
+
+                var rolePermissionSeeder = services.GetRequiredService<RolePermissionSeederService>();
+                await rolePermissionSeeder.SeedPermissionsToAdminAsync();
+                await rolePermissionSeeder.SeedPermissionsToUserAsync();
+                await rolePermissionSeeder.SeedPermissionsToModeratorAsync();
+
+                // ✅ Lấy danh sách quyền sau khi seed
+                var permissionService = services.GetRequiredService<IPermissionService>();
+                var permissions = await permissionService.GetAllAsync();
+                
+            }
+
+            // Swagger
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -101,27 +167,32 @@ namespace CommercialNews
 
             app.UseHttpsRedirection();
 
-            
-
-            //var key = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-            //Console.WriteLine(key);
-
-            //Use CORS 
+            // CORS
             app.UseCors("AllowAll");
 
-            // ✅ Rate Limiting Middleware
+            // Rate limiting
             app.UseIpRateLimiting();
 
-            // ✅ Use Authentication & Authorization — ĐÚNG THỨ TỰ
+            // Authentication & Authorization
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Map Controllers
+
+            app.UseHttpMetrics();
+            // 👉 Đây là cách chuẩn mới (không cần UseRouting + UseEndpoints)
             app.MapControllers();
 
+            app.MapHealthChecks("/healthz", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
-            //Run
+            app.MapMetrics(); // /metrics cho Prometheus
+
+
             app.Run();
+
         }
     }
 }

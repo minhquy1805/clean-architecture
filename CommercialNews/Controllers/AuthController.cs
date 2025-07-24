@@ -93,7 +93,7 @@ namespace CommercialNews.Controllers
         {
             var domain = _config["App:Domain"];
             var verifyLinkBase = $"{domain}/auth";
-            await _userService.ForgotPasswordAsync(request.Email, verifyLinkBase);
+            await _userService.ForgotPasswordAsync(request, verifyLinkBase);
             return OkResponse<string>(null!, "Please check your email to reset password!");
         }
 
